@@ -1,0 +1,386 @@
+.container {
+    max-width: 960px;
+}
+
+.product-device {
+    position: absolute;
+    right: 10%;
+    bottom: -30%;
+    width: 300px;
+    height: 540px;
+    background-color: #333;
+    border-radius: 21px;
+    -webkit-transform: rotate(30deg);
+    transform: rotate(30deg);
+}
+
+.product-device::before {
+    position: absolute;
+    top: 10%;
+    right: 10px;
+    bottom: 10%;
+    left: 10px;
+    content: "";
+    background-color: rgba(255, 255, 255, .1);
+    border-radius: 5px;
+}
+
+.product-device-2 {
+    top: -25%;
+    right: auto;
+    bottom: 0;
+    left: 5%;
+    background-color: #e5e5e5;
+}
+
+
+/*
+   * Extra utilities
+   */
+
+.flex-equal>* {
+    -ms-flex: 1;
+    flex: 1;
+}
+
+@media (min-width: 768px) {
+    .flex-md-equal>* {
+        -ms-flex: 1;
+        flex: 1;
+    }
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+
+a.disabled {
+    pointer-events: none;
+    cursor: default;
+}
+
+/* esri */
+#viewDiv {
+    height: 600px;
+    width: 100%;
+    border-color: black;
+}
+
+.esri-view-surface,
+.esri-view-surface--touch-none {
+    border-radius: 5px !important;
+}
+
+/*修改原有弹窗的css样式
+        https://blog.csdn.net/qq_43066675/article/details/108873124
+        */
+[class*="esri-popup--is-docked-top-"] .esri-popup__footer,
+[class*="esri-popup--aligned-bottom-"] .esri-popup__footer {
+    border-bottom: solid 1px #F5F5F5;
+}
+
+.esri-popup__header {
+    border-radius: 5px !important;
+    background-color: #F5F5F5;
+    color: #000000;
+}
+
+
+.esri-popup__header-title {
+    background-color: #F5F5F5 !important;
+    color: #000000 !important;
+}
+
+.esri-popup__header-container,
+.esri-popup__header-container--button {
+    background-color: #F5F5F5 !important;
+    outline: none !important;
+}
+
+.esri-popup__icon,
+.esri-icon-close {
+    color: #000000 !important;
+}
+
+/*.esri-view-width-xlarge */
+.esri-popup__main-container {
+    background-color: #F5F5F5 !important;
+    color: #000000 !important;
+    width: 200px !important;
+    border-color: #000000 #000000 #000000 #000000 !important;
+    border-radius: 5px !important;
+}
+
+.esri-popup__inline-actions-container {
+    display: none;
+}
+
+.esri-feature-content {
+    background-color: #F5F5F5 !important;
+}
+
+
+.esri-ui .esri-popup {
+    border-radius: 5px !important;
+}
+
+.esri-popup__header-title {
+    font-weight: 100 !important;
+}
+
+.attrClass {
+    padding: 8px;
+    width: 300px;
+    height: 50px;
+    background-color: #F8F8FF;
+    font-size: 5px;
+    text-align: center;
+    color: black;
+}
+
+.esri-coordinate-conversion {
+    display: none;
+}
+
+.esri-attribution .esri-attribution__sources {
+    display: none;
+}
+
+.esri-attribution__powered-by {
+    color: black !important;
+}
+
+
+
+
+/* normal css */
+
+.bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+@media (min-width : 768px) {
+    .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+    }
+}
+
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1;
+    /* Sit on top */
+    padding-top: 100px;
+    /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.containerTime {
+    color: #333;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#weather-board {
+    border-radius: 30px;
+}
+
+#station-board {
+    border-radius: 30px;
+    border: 1px solid #778899;
+}
+
+#city-board {
+    border-radius: 30px;
+    border: 1px solid #778899;
+}
+
+/*------*/
+:root {
+    --mainColor: #eaeaea;
+    --secondaryColor: #fff;
+    --borderColor: #c1c1c1;
+    --mainText: black;
+    --secondaryText: #4b5156;
+    --themeDotBorder: #24292e;
+    --buttonColor: black;
+}
+
+.intro-wrapper {
+    border: 1px solid #778899;
+    background-color: var(- -secondaryColor);
+    border-radius: 10px;
+}
+
+.nav-wrapper {
+    border-radius: 10px 10px 0 0;
+    border-bottom: 1px solid var(--borderColor);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #eaeaea;
+}
+
+#navigation a {
+    color: var(- -mainText);
+}
+
+#navigation {
+    margin: 0;
+    padding: 10px;
+}
+
+#navigation li {
+    display: inline-block;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.dots-wrapper {
+    display: flex;
+    padding: 10px;
+}
+
+.browser-dot {
+    background-color: black;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    margin: 5px;
+    -webkit-box-shadow: 47px 10px 69px 0px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 47px 10px 69px 0px rgba(0, 0, 0, 0.75);
+    box-shadow: 47px 10px 69px 0px rgba(0, 0, 0, 0.75);
+}
+
+#dot1 {
+    background-color: #FC6058;
+}
+
+#dot2 {
+    background-color: #FEC02F;
+}
+
+#dot3 {
+    background-color: #2ACA3E;
+}
+
+.left-column {
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
+/*--------------*/
+#scroll {
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    /*cursor:pointer;*/
+    width: 50px;
+    height: 50px;
+    background-color: #3498db;
+    text-indent: -9999px;
+    display: none;
+    -webkit-border-radius: 60px;
+    -moz-border-radius: 60px;
+    border-radius: 60px
+}
+
+#scroll span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -12px;
+    height: 0;
+    width: 0;
+    border: 8px solid transparent;
+    border-bottom-color: #ffffff;
+}
+
+#scroll:hover {
+    background-color: #e74c3c;
+    opacity: 1;
+    filter: "alpha(opacity=100)";
+    -ms-filter: "alpha(opacity=100)";
+}
+
+
+table {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+table, td, tr {
+    border: 1px solid #333;
+}
+
+thead, tfoot {
+    background-color: #333;
+    color: #fff;
+}
+
+.table {
+	width: 95%; 
+	margin-left: auto; 
+	margin-right: auto;
+}
+.table td, .table th, .table tr {
+    vertical-align: center;
+    border-top: 1px solid black;
+    border-width: 1px;
+    border-color: black;
+}
+.table thead th {
+    vertical-align: center;
+    border-bottom: black;
+    color: black;
+}

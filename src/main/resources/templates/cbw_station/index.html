@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <meta charset="UTF-8">
+    <title>天氣站點管理</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+    <link rel="icon" href="/csprscbw/favicon.ico">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="/csprscbw/js/cbw_station/index.js"></script>
+	
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		$(document).ready(function() {
+			var searchCity = /*[[${searchCity}]]*/ '全縣市';
+			var selId = document.getElementById("select1");
+		    var items = selId.options;//Javascript get select all option
+
+			for (var i = 0; i < items.length; i++) {
+	        	console.log(items[i].text);
+		   		if (items[i].text == searchCity) {
+		        	selId.options[i].selected = true;
+		    	}
+			}
+		});
+	/*]]>*/
+	</script>
+</head>
+<div th:include="components/header :: header"></div>
+<br>
+
+<div class="container">
+
+    <h1 class="text-center py-2">天氣站點</h1>
+    <h1 class="text-center" style="font-size:15px">(編輯功能暫不開放)</h1>
+
+    <div class="form-group d-flex justify-content-center">
+        <select class="form-control text-center" id="select1" style="width: 20%;">
+            <option>全縣市</option>
+            <optgroup label="北部">
+                <option value="10017">基隆市</option>
+                <option value="63">臺北市</option>
+                <option value="65">新北市</option>
+                <option value="68">桃園市</option>
+                <option value="10018">新竹市</option>
+                <option value="10004">新竹縣</option>
+                <option value="10005">苗栗縣</option>
+            </optgroup>
+            <optgroup label="中部">
+                <option value="66">臺中市</option>
+                <option value="10007">彰化縣</option>
+                <option value="10008">南投縣</option>
+                <option value="10009">雲林縣</option>
+                <option value="10020">嘉義市</option>
+                <option value="10010">嘉義縣</option>
+            </optgroup>
+            <optgroup label="南部">
+                <option value="67">臺南市</option>
+                <option value="64">高雄市</option>
+                <option value="10013">屏東縣</option>
+            </optgroup>
+            <optgroup label="東部">
+                <option value="10002">宜蘭縣</option>
+                <option value="10015">花蓮縣</option>
+                <option value="10014">臺東縣</option>
+            </optgroup>
+            <optgroup label="外島">
+                <option value="10016">澎湖縣</option>
+                <option value="09020">金門縣</option>
+                <option value="09007">連江縣</option>
+            </optgroup>
+        </select>
+        &nbsp;
+        <button type="button" class="btn btn-light" onclick="getStationData();">查詢</button>
+    </div>
+
+    <!-- 
+		<div th:if="${warning != null}" class="alert alert-danger" role="alert" id="warning-board">
+			<strong th:text="${warning}"></strong>
+		</div>
+		<form>
+		  <div class="form-row">
+		    <div class="form-group col-md-12">
+		      <input type="hidden" class="form-control" id="inputId" name="id">
+		    </div>
+		  </div>
+		  <div class="form-row">
+		    <div class="form-group col-md-6">
+		      <label for="inputStation">站點</label> 
+		      <input type="text" class="form-control" id="inputStation" name="station" placeholder="station" required>
+		    </div>
+		    <div class="form-group col-md-6">
+		      <label for="inputCity">縣市</label>
+		      <input type="password" class="form-control" id="inputCity" name="city" placeholder="city" required>
+		    </div>
+		  </div>
+		  <div class="form-row">
+		    <div class="form-group col-md-6">
+		      <label for="inputCoordX">經度</label> 
+		      <input type="text" class="form-control" id="inputCoordX" name="coord_X" placeholder="coord_X" required>
+		    </div>
+		    <div class="form-group col-md-6">
+		      <label for="inputCoordY">Password</label>
+		      <input type="password" class="form-control" id="inputCoordY" name="coord_Y" placeholder="coord_Y" required>
+		    </div>
+		  </div>
+		  <div class="form-group row">
+		  	<div class="col-sm-10">
+				<h5 class="btn btn-primary" onclick="alterAccount()">Add-Update</h5>
+			</div>
+		  </div>
+		</form>
+		 -->
+</div>
+<br>
+
+<body>
+    <div class="container">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="width: 10%">#</th>
+                    <th style="width: 20%">站點名稱</th>
+                    <th style="width: 10%">縣市</th>
+                    <th style="width: 20%">經度</th>
+                    <th style="width: 20%">緯度</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="MyBean: ${listPage}">
+                    <th style="width: 10%" th:text="${MyBean.id}">id</th>
+                    <td style="width: 20%" th:text="${MyBean.station}">station</td>
+                    <td style="width: 10%" th:text="${MyBean.city}">city</td>
+                    <td style="width: 20%" th:text="${MyBean.coord_X}">coord_X</td>
+                    <td style="width: 20%" th:text="${MyBean.coord_Y}">coord_Y</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="btn-toolbar justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
+        <div th:if="${pageRequest.getCurrentPage() != 1}">
+            <a th:href="@{'/cbw_station'(page=1)}" 
+            	onclick="location.href=this.href+'&city='+$('#select1').find(':selected').text();return false;" 
+            	class="btn btn-secondary">Start</a>
+        </div>
+        &nbsp
+        <div th:if="${pageRequest.getCurrentPage() > 2}">
+            <a th:href="@{'/cbw_station'(page=${pageRequest.getCurrentPage()}-2)}"
+            	onclick="location.href=this.href+'&city='+$('#select1').find(':selected').text();return false;"
+                th:text="${pageRequest.getCurrentPage()-2}" class="btn btn-secondary">..</a>
+        </div>
+        &nbsp
+        <div th:if="${pageRequest.getCurrentPage() > 1}">
+            <a th:href="@{'/cbw_station'(page=${pageRequest.getCurrentPage()}-1)}"
+            	onclick="location.href=this.href+'&city='+$('#select1').find(':selected').text();return false;"
+                th:text="${pageRequest.getCurrentPage()}-1" class="btn btn-secondary">.</a>
+        </div>
+        &nbsp
+        <a th:href="@{'/cbw_station'(page=${pageRequest.getCurrentPage()})}" th:text="${pageRequest.getCurrentPage()}"
+        	onclick="location.href=this.href+'&city='+$('#select1').find(':selected').text();return false;"
+            class="btn btn-success"></a>
+        &nbsp
+        <div th:if="${pageRequest.getCurrentPage() <= pageRequest.getMaxPage() -1}">
+            <a th:href="@{'/cbw_station'(page=${pageRequest.getCurrentPage()}+1)}"
+            	onclick="location.href=this.href+'&city='+$('#select1').find(':selected').text();return false;"
+                th:text="${pageRequest.getCurrentPage()}+1" class="btn btn-secondary">.</a>
+        </div>
+        &nbsp
+        <div th:if="${pageRequest.getCurrentPage() <= pageRequest.getMaxPage() -2}">
+            <a th:href="@{'/cbw_station'(page=${pageRequest.getCurrentPage()}+2)}"
+            	onclick="location.href=this.href+'&city='+$('#select1').find(':selected').text();return false;"
+                th:text="${pageRequest.getCurrentPage()}+2" class="btn btn-secondary">..</a>
+        </div>
+        &nbsp
+        <div th:if="${pageRequest.getCurrentPage() != pageRequest.getMaxPage()}">
+            <a th:href="@{'/cbw_station'(page=${pageRequest.getMaxPage()})}" 
+            	onclick="location.href=this.href+'&city='+$('#select1').find(':selected').text();return false;" 
+            	class="btn btn-secondary">End</a>
+        </div> 
+    </div>
+
+    <div class="container">
+        <div th:include="components/footer :: footer"></div>
+    </div>
+</body>
+
+
+</html>

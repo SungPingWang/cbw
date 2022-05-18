@@ -1,0 +1,15 @@
+<config
+        xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+        xmlns='http://www.ehcache.org/v3'>
+
+    <cache alias="lui_cache"> <!-- cache的名稱為"employee_cache" -->
+        <expiry>
+            <ttl unit="seconds">300</ttl> <!-- cache建立後只會存在300秒 -->
+        </expiry>
+        <resources>
+            <heap unit="entries">2000</heap> <!-- heap可存2000個快取物件 -->
+            <offheap unit="MB">100</offheap> <!-- heap外空間可存100MB的快取 -->
+        </resources>
+    </cache>
+
+</config>

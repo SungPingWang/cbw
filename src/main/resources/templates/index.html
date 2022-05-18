@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CBW氣象局即時測站資料</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://js.arcgis.com/4.23/esri/themes/light/main.css">
+    <link rel="stylesheet" href="/csprscbw/css/cbw_home/cbw.css">
+    <link rel="icon" href="/csprscbw/favicon.ico">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="/csprscbw/assets/dist/js/jquery.min.js"></script>
+    <script src="/csprscbw/js/cbw_home/index.js"></script>
+    <script src="/csprscbw/js/cbw_home/cbw.js"></script>
+
+	<!--
+	<link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.0.0-beta.79/calcite.css" />
+    <script src="https://cdn.rawgit.com/calvinmetcalf/shapefile-js/gh-pages/dist/shp.js"></script>
+	-->
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        $(document).ready(function () {
+            var weatherJson = {
+                "晴": "/csprscbw/image/weather/summer.png",
+                "多雲": "/csprscbw/image/weather/partly-cloudy-day.png",
+                "陰": "/csprscbw/image/weather/rain.png",
+                "晴有靄": "/csprscbw/image/weather/partly-cloudy-day.png",
+                "陰有靄": "/csprscbw/image/weather/partly-cloudy-day.png",
+                "多雲": "/csprscbw/image/weather/partly-cloudy-day.png",
+                "": "/csprscbw/image/weather/sun.png"
+            }
+            var station20Cbwbeans = /*[[${station20Cbwbeans}]]*/ 'default';
+            var current_active = document.getElementById("station-active").getElementsByClassName("active")[0];
+            createStationBoardStatusHtml(station20Cbwbeans);
+        });
+	/*]]>*/
+    </script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var changeNavItem = function (element) {
+            var station20Cbwbeans = /*[[${station20Cbwbeans}]]*/ 'default';
+            var current_active = document.getElementById("station-active").getElementsByClassName("active")[0];
+            if (current_active.id != element.id) { // 如果不是原來的nav-item就可以加入
+                element.classList.add("active");
+                // 加入後要記得刪除原先的active
+                current_active.classList.remove("active");
+
+                if (element.id == "weather-status") {
+                    createStationBoardStatusHtml(station20Cbwbeans);
+                } else if (element.id == "weather-humidity") {
+                    createStationBoardHumidityHtml(station20Cbwbeans);
+                } else {
+                    createStationBoardRainFallHtml(station20Cbwbeans);
+                }
+            }
+        }
+	/*]]>*/
+    </script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var showingStation = /*[[${showingStation}]]*/ 'default';
+	/*]]>*/
+    </script>
+
+</head>
+
+<body>
+    <div th:include="components/header :: header"></div>
+
+    <div class="container">
+        <div class="intro-wrapper">
+            <div class="nav-wrapper">
+                <div class="dots-wrapper">
+                    <div id="dot1" class="browser-dot"></div>
+                    <div id="dot2" class="browser-dot"></div>
+                    <div id="dot3" class="browser-dot"></div>
+                </div>
+                <ul id="navigation">
+                    <!--<li><a href="#">Contact</a></li>-->
+                </ul>
+            </div>
+            <div class="left-column">
+                <div class="container">
+                    <div class="container row">
+                        <h1><strong>氣象局即時資料</strong></h1> &nbsp
+                        <img src="/csprscbw/image/weather/partly-cloudy-day.png" alt="Simply Easy Learning" width="60"
+                            height="60">
+                    </div>
+                    <p class="lead">
+                        <strong>本系統蒐集中央氣象局即時最新天氣預報，系統約每小時更新一次。</strong><br />
+                        <strong>各測站更新週期不一，可按下方按鈕進行充新整理。<br />
+                            <a href="http://fa.idv.tw/superset/dashboard/22/" target="_blank">點擊此</a>可觀看儀表板(需登入)
+                        </strong>
+                    </p>
+                    <a class="btn btn-outline-secondary btn-primary" href="/csprscbw/cwb/index" role="button">重新整理&nbsp
+                        <img src="/csprscbw/image/refresh.png" width="20" height="20" />
+                    </a>
+                    <div class="containerTime">
+                        <h5 id="headline"><strong>距上次重新整理</strong></h5>
+                        <div id="countdown" class="btn-group" role="group"
+                            aria-label="Basic checkbox toggle button group">
+                            <label class="btn btn-outline-primary" for="btncheck1"><span id="hours"
+                                    class="text-dark"></span>&nbsp <strong>時</strong></label>
+                            <label class="btn btn-outline-primary" for="btncheck2"><span id="minutes"
+                                    class="text-dark"></span>&nbsp <strong>分</strong></label>
+                            <label class="btn btn-outline-primary" for="btncheck3"><span id="seconds"
+                                    class="text-dark"></span>&nbsp <strong>秒</strong></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-md-flex flex-md-equal w-100 my-md-3 pl-md-3">
+
+        <div id="weather-board" class="bg-dark mr-md-3 pt-3 px-3 pt-md-3 px-md-3 text-center text-white">
+            <div class="my-3 p-3">
+                <h3 class="display-5"><strong>主要測站點位資料</strong><img width='60' height='60'
+                        src='/csprscbw/image/station.png' /></h3>
+                <div id="viewDiv"></div>
+				<div id="attrId" class="attrClass"><div>暫無位置</div></div>
+				<calcite-action-bar id="panelItem">
+		          <calcite-action-group>
+		            <calcite-action id="bmapId" text="Basemaps" icon="layer-basemap"></calcite-action>
+		          </calcite-action-group>
+		        </calcite-action-bar>
+            </div>
+        </div>
+        <div id="station-board" class="bg-light mr-md-3 pt-3 px-3 pt-md-3 px-md-3 text-center">
+            <div class="my-3 p-3">
+                <h3 class="display-5"><strong>主要測站最新天氣</strong><img width='60' height='60'
+                        src='/csprscbw/image/weather/sun.png' /></h3>
+                <p class="lead"><strong>點選測站按鈕獲取該測站近期天氣</strong></p>
+                <ul id="station-active" class="nav nav-tabs">
+                    <li class="nav-item">
+                        <!-- 天氣狀況 -->
+                        <a class="nav-link active btn" id="weather-status"
+                            onclick="changeNavItem(this);"><strong>天氣狀況</strong></a>
+                    </li>
+                    <li class="nav-item">
+                        <!-- 濕度 -->
+                        <a class="nav-link btn" id="weather-humidity"
+                            onclick="changeNavItem(this);"><strong>濕度</strong></a>
+                    </li>
+                    <li class="nav-item">
+                        <!-- 類積雨量 -->
+                        <a class="nav-link btn" id="weather-rainfall"
+                            onclick="changeNavItem(this);"><strong>累積雨量</strong></a>
+                    </li>
+                </ul>
+                <br>
+                <div id="station20s">
+                    <!-- 測站20 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="city-board" class="position-relative overflow-hidden p-3 p-md-2 m-md-3 text-center bg-light">
+        <div class="col-md-10 p-lg-1 mx-auto my-2">
+            <div class='d-flex justify-content-center' style="text-align:center">
+                <h2 class="font-weight-normal"><strong>氣象局即時資料</strong></h2>
+                &nbsp
+                <!-- onclick="downloadCsv() class="disabled" hidden" -->
+                <a id="downloadCsv" href="/csprscbw/cwb/download_Csv" class="disabled" hidden>
+                    <img src="/csprscbw/image/export-csv.png" width="40" height="40" /><strong
+                        style="font-size:10px">(下載)</strong>
+                </a>
+                <!-- /csprscbw/cwb/dashboard
+		    	http://172.22.110.17/superset/dashboard/disaster/
+		    	http://fa.idv.tw/superset/dashboard/22/?preselect_filters=%7B%7D
+		    	-->
+                <a id="viewSuperset" href="/csprscbw/cwb/dashboard" class="disabled" target="_blank" hidden>
+                    <img src="/csprscbw/image/dashboard.png" width="40" height="40" /><strong
+                        style="font-size:10px">(儀錶板)</strong>
+                </a>
+            </div>
+
+            <div class="form-group d-flex justify-content-center">
+                <select class="form-control text-center" id="select1" style="width: 20%;" onchange="selectCity(this);">
+                    <option>請選擇</option>
+                    <optgroup label="北部">
+                        <option value="10017">基隆市</option>
+                        <option value="63">臺北市</option>
+                        <option value="65">新北市</option>
+                        <option value="68">桃園市</option>
+                        <option value="10018">新竹市</option>
+                        <option value="10004">新竹縣</option>
+                        <option value="10005">苗栗縣</option>
+                    </optgroup>
+                    <optgroup label="中部">
+                        <option value="66">臺中市</option>
+                        <option value="10007">彰化縣</option>
+                        <option value="10008">南投縣</option>
+                        <option value="10009">雲林縣</option>
+                        <option value="10020">嘉義市</option>
+                        <option value="10010">嘉義縣</option>
+                    </optgroup>
+                    <optgroup label="南部">
+                        <option value="67">臺南市</option>
+                        <option value="64">高雄市</option>
+                        <option value="10013">屏東縣</option>
+                    </optgroup>
+                    <optgroup label="東部">
+                        <option value="10002">宜蘭縣</option>
+                        <option value="10015">花蓮縣</option>
+                        <option value="10014">臺東縣</option>
+                    </optgroup>
+                    <optgroup label="外島">
+                        <option value="10016">澎湖縣</option>
+                        <option value="09020">金門縣</option>
+                        <option value="09007">連江縣</option>
+                    </optgroup>
+                </select>
+            </div>
+        </div>
+        <div class="container">
+
+        </div>
+        <table class="table table-bordered table-sm table-striped">
+            <thead>
+                <tr class="table-info">
+                    <th scope="col" class='align-middle'>測站<br>名稱</th>
+                    <th scope="col" class='align-middle'>觀測<br>時間</th>
+                    <th scope="col" class='align-middle'>溫度<br>(攝氏)</th>
+                    <th scope="col" class='align-middle'>天氣</th>
+                    <th scope="col" class='align-middle'>風向</th>
+                    <th scope="col" class='align-middle'>風力<br>(級)</th>
+                    <th scope="col" class='align-middle'>陣風<br>(級)</th>
+                    <th scope="col" class='align-middle'>能見度<br>(公里)</th>
+                    <th scope="col" class='align-middle'>相對<br>溼度(%)</th>
+                    <th scope="col" class='align-middle'>海平面<br>氣壓(百帕)</th>
+                    <th scope="col" class='align-middle'>當日累積雨量<br>(毫米)</th>
+                    <th scope="col" class='align-middle'>日照<br>時數</th>
+                </tr>
+            </thead>
+            <tbody id="selectCityCallBackTable"></tbody>
+        </table>
+    </div>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content" id="modal-content"></div>
+    </div>
+
+
+    <a href="#" id="scroll" style="display: none;">
+        <span style="display:block;"></span>
+    </a>
+
+
+
+
+    <div class="container">
+        <div th:include="components/footer :: footer"></div>
+    </div>
+
+	<script src="https://js.arcgis.com/4.23/"></script>
+    <script src="/csprscbw/js/cbw_home/arcgis.js"></script>
+	<script type="module" src="https://js.arcgis.com/calcite-components/1.0.0-beta.79/calcite.esm.js"></script>
+  	<script nomodule="" src="https://js.arcgis.com/calcite-components/1.0.0-beta.79/calcite.js"></script>
+    <script>
+        window.onload = function () {
+			/**/
+            var orgCoordinateDisplayNode = document.getElementsByClassName('esri-coordinate-conversion__display')[0];
+            orgCoordinateDisplayNode.addEventListener('DOMNodeInserted',
+                function () {
+                    var pntSplit = orgCoordinateDisplayNode.innerHTML.split(",")
+                    var html = "WGS84: " + orgCoordinateDisplayNode.innerHTML + "<br>";
+                    html += "twd97: " + pntSplit[0].trim() + "轉" + ", " + pntSplit[1].trim() + "轉";
+                    document.getElementById("attrId").innerHTML = html;
+                }, false);
+            document.getElementsByClassName("esri-attribution__powered-by")[0].innerHTML = "&copy;中華民國航空測量及遙感探測學會 2021-2022";
+
+            // 修改zoom in out圖片
+            var plusIcon = document.getElementsByClassName("esri-icon-plus")[0];
+            plusIcon.classList.add("esri-icon-zoom-in-magnifying-glass");
+            plusIcon.classList.remove("esri-icon-plus");
+            var minusIcon = document.getElementsByClassName("esri-icon-minus")[0];
+            minusIcon.classList.add("esri-icon-zoom-out-magnifying-glass");
+            minusIcon.classList.remove("esri-icon-minus");
+        }
+    </script>
+
+</body>
+
+</html>

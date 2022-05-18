@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+				xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+	<meta charset="UTF-8">
+	<title>帳號管理</title>
+	
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+	<link rel="icon" href="/csprscbw/favicon.ico">
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" ></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" ></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" ></script>
+	<script src="/csprscbw/assets/dist/js/jquery.min.js"></script>
+	<script src="/csprscbw/js/account/index.js"></script>
+</head>
+	<div th:include="components/header :: header"></div>
+	
+	<div class="container">
+		
+		<h1 class="text-center py-2">帳號管理</h1>
+		<div th:if="${warning != null}" class="alert alert-danger" role="alert" id="warning-board">
+			<strong th:text="${warning}"></strong>
+		</div>
+		<form>
+		  <div class="form-row">
+		    <div class="form-group col-md-12">
+		      <input type="hidden" class="form-control" id="inputId" name="id">
+		    </div>
+		  </div>
+		  <div class="form-row">
+		    <div class="form-group col-md-6">
+		      <label for="inputName">帳號</label> 
+		      <input type="text" class="form-control" id="inputName" name="name" placeholder="Name" required>
+		    </div>
+		    <div class="form-group col-md-6">
+		      <label for="inputPassword">密碼</label>
+		      <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password" required>
+		    </div>
+		  </div>
+		  <div class="form-row">
+		    <div class="form-group col-md-12">
+		      <label for="inputDescription">使用者描述</label> 
+		      <input type="text" class="form-control" id="inputDescription" name="description" placeholder="Description" required>
+		    </div>
+		  </div>
+		  <div class="form-group row">
+		    <div class="col-sm-2">權限設定</div>
+		    <div class="col-sm-10">
+		      <div class="form-check">
+		        <input class="form-check-input" type="checkbox" id="roleCheck1">
+		        <label class="form-check-label" for="roleCheck1">
+		          User - normal user
+		        </label>
+		      </div>
+		      <div class="form-check">
+		        <input class="form-check-input" type="checkbox" id="roleCheck2">
+		        <label class="form-check-label" for="roleCheck2">
+		          Manager - higher level
+		        </label>
+		      </div>
+		      <div class="form-check">
+		        <input class="form-check-input" type="checkbox" id="roleCheck3">
+		        <label class="form-check-label" for="roleCheck3">
+		          Admin - superuser
+		        </label>
+		      </div>
+		    </div>
+		  </div>
+		  <div class="form-group row">
+		  	<div class="col-sm-10">
+				<h5 class="btn btn-primary" onclick="alterAccount()">Add-Update</h5>
+	<!-- 		<button type="submit" class="btn btn-primary float-right">Add-Update</button> -->
+			</div>
+		  </div>
+		</form>
+	</div>
+	<br>
+	<body>
+		<div class="container">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+				    	<th style="width: 10%">#</th>
+				     	<th style="width: 10%">帳號</th>
+				      	<th style="width: 20%">密碼</th>
+				      	<th style="width: 20%">使用者描述</th>
+				      	<th style="width: 20%">權限</th>
+				      	<th style="width: 20%">功能</th>
+				    </tr>
+				</thead>
+				<tbody>
+				  	<tr th:each="MyBean: ${listPage}">
+				  		<th style="width: 10%" th:text="${MyBean.id}">id</th>
+				  		<td style="width: 10%" th:text="${MyBean.name}">name</td>
+				  		<td style="width: 20%" th:text="${MyBean.password}">password</td>
+				  		<td style="width: 20%" th:text="${MyBean.description}">description</td>
+				  		<td style="width: 20%" th:text="${MyBean.roles}">roles</td>
+				  		<div th:if="${#session.getAttribute('UserRole')} ne ${MyBean.name}">
+							<td style="width: 20%">
+					  			<a class="btn btn-info" onclick="alterBean(this)" disabled>編輯</a> &nbsp
+					  			<a th:href="@{'/account/deleteAccount/' + ${MyBean.id}(page=${pageRequest.getCurrentPage()})}" class="btn btn-danger" disabled>刪除</a>
+					  		</td>
+						</div>
+				  		<div th:unless="${#session.getAttribute('UserRole')} ne ${MyBean.name}">
+						   <td style="width: 20%">
+					  	   		<a class="btn btn-info" onclick="alterBean(this)" disabled>Alter</a> &nbsp
+					  	   </td>
+						</div>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="btn-toolbar justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
+			<div th:if="${pageRequest.getCurrentPage() != 1}">
+				<a th:href="@{'/account'(page=1)}" class="btn btn-secondary">Start</a>
+			</div>
+			&nbsp
+			<div th:if="${pageRequest.getCurrentPage() > 2}">
+				<a th:href="@{'/account'(page=${pageRequest.getCurrentPage()}-2)}" th:text="${pageRequest.getCurrentPage()-2}" class="btn btn-secondary">..</a>
+			</div>
+			&nbsp
+			<div th:if="${pageRequest.getCurrentPage() > 1}">
+				<a th:href="@{'/account'(page=${pageRequest.getCurrentPage()}-1)}" th:text="${pageRequest.getCurrentPage()}-1" class="btn btn-secondary">.</a>
+			</div>
+			&nbsp
+			<a th:href="@{'/account'(page=${pageRequest.getCurrentPage()})}" th:text="${pageRequest.getCurrentPage()}"  class="btn btn-success"></a>
+			&nbsp
+			<div th:if="${pageRequest.getCurrentPage() <= pageRequest.getMaxPage() -1}">
+				<a th:href="@{'/account'(page=${pageRequest.getCurrentPage()}+1)}" th:text="${pageRequest.getCurrentPage()}+1" class="btn btn-secondary">.</a>
+			</div>
+			&nbsp
+			<div th:if="${pageRequest.getCurrentPage() <= pageRequest.getMaxPage() -2}">
+				<a th:href="@{'/account'(page=${pageRequest.getCurrentPage()}+2)}" th:text="${pageRequest.getCurrentPage()}+2" class="btn btn-secondary">..</a>
+			</div>
+			&nbsp
+			<div th:if="${pageRequest.getCurrentPage() != pageRequest.getMaxPage()}">
+				<a th:href="@{'/account'(page=${pageRequest.getMaxPage()})}" class="btn btn-secondary">End</a>
+			</div>
+		</div>
+		
+		<div class="container">
+			<div th:include="components/footer :: footer"></div>
+		</div>
+	</body>
+	
+	
+</html>
