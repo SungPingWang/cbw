@@ -2,27 +2,35 @@ package com.csprs.cbw.controller.system;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.social.connect.web.HttpSessionSessionStrategy;
+import org.springframework.social.connect.web.SessionStrategy;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.csprs.cbw.util.MailService;
 import com.csprs.cbw.bean.user.MyProfile;
 import com.csprs.cbw.dao.user.MyProfileDaoImpl;
+import com.csprs.cbw.service.security.TimeLimitService;
+import com.csprs.cbw.util.Constant;
 import com.csprs.cbw.util.EncryptDecrypt;
 
 @Controller
@@ -46,6 +54,9 @@ public class LoginOutController {
 	private MyProfileDaoImpl myProfileDaoImpl;
 	@Autowired
 	MailService mailService;
+	@Autowired
+	private TimeLimitService restPwdTimeLimitService;
+
 
 	// 忘記密碼頁面
 	@GetMapping("/forgotPwd")
@@ -108,12 +119,30 @@ public class LoginOutController {
 	
 	@PostMapping("/resetPwd")
 	public String resetPwd(String pwd1, String pwd2, 
-			Map<String, Object> map, HttpSession session) throws Exception {
+			Map<String, Object> map, 
+			HttpServletRequest request, HttpServletResponse response,
+			HttpSession session) throws Exception {
+		
+		SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
+		boolean isLimit = restPwdTimeLimitService.CountLimitProccess(
+				new ServletWebRequest(request), 
+				sessionStrategy, 
+        		Constant.SESSION_LOGIN_ERROR_COUNT_NAME, 
+        		Constant.SESSION_MAX_RESET_PWD_ERROR_COUNT,
+        		Constant.SESSION_RESET_PWD_ERROR_DUETIME_NAME);
+		if (isLimit) {
+			return "error/lock.html";
+		}
+       
 		
 		String account = SecurityContextHolder.getContext().getAuthentication().getName();
 		if(!pwd1.equals(pwd2) || pwd1 == null || pwd2 == null) {
 			logger.warn("密碼重設失敗： " + account);
 			map.put("errorMsg", "密碼新設錯誤，請重新仔細輸入。");
+			
+			session.setAttribute(Constant.SESSION_RESET_PWD_ERROR_COUNT_NAME, 1);
+			
+			
 			return "system/resetPassword.html";
 		}else {
 			logger.info("密碼重設成功： " + account);
@@ -121,6 +150,11 @@ public class LoginOutController {
 			return "redirect:/cwb/index";
 		}
 		
+	}
+	
+	@GetMapping("/lock")
+	public String lock() {
+		return "error/lock.html"; 
 	}
 	
 }

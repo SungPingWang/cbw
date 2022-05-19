@@ -23,8 +23,11 @@ public class VertifyPwdFilter extends OncePerRequestFilter {
     private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
     
     private static String LOGIN_PATH = "/csprscbw/login";
+    private static String CAPTCHA_PATH = "/csprscbw/code/image";
+    private static String ERROR_PATH = "/csprscbw/error";
     private static String VERTIFY_PWD_PATH = "/csprscbw/handleLogin/vertify";
     private static String RESET_PWD_PATH = "/csprscbw/handleLogin/resetPwd";
+    private static String LOCK_PATH = "/csprscbw/handleLogin/lock";
     private static String VERTIFY_SESSION = "vertifyState";
 
 
@@ -47,7 +50,13 @@ public class VertifyPwdFilter extends OncePerRequestFilter {
 			// 設定session為1
 			sessionStrategy.setAttribute(servletWebRequest, VERTIFY_SESSION, "1");
 		// 2 若不為判斷1，如果去了login以外的頁面都必須要返回
-		}else if(!url.startsWith(LOGIN_PATH) && !isStatic && !url.startsWith(RESET_PWD_PATH)){
+		}else if(
+				!url.startsWith(LOGIN_PATH) && !isStatic 
+				&& !url.startsWith(RESET_PWD_PATH) 
+				&& !url.startsWith(ERROR_PATH)
+				&& !url.startsWith(CAPTCHA_PATH)
+				&& !url.startsWith(LOCK_PATH)){
+			System.out.println("有人在亂喔: " + url);
 			Object vertifyState = sessionStrategy.getAttribute(servletWebRequest, VERTIFY_SESSION);
 			if("1".equals((String)vertifyState)) {
 				response.sendRedirect(LOGIN_PATH);

@@ -17,6 +17,8 @@ import org.springframework.social.connect.web.SessionStrategy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.ServletWebRequest;
 
+import com.csprs.cbw.util.Constant;
+
 
 @Component
 public class LoginFailureHandler implements AuthenticationFailureHandler {
@@ -24,7 +26,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
 	
 	private final Logger log = LoggerFactory.getLogger("CustomOperateLog");
 	@Autowired
-	private LoginTimeLimitService loginTimeLimitService;
+	private TimeLimitService loginTimeLimitService;
 
 	private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
 	
@@ -34,9 +36,13 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
 		//String loginuser = (String)request.getParameter("username");
 		//logger.error("登入失敗: " + loginuser);
 		//response.sendRedirect("/csprscbw/login?error");
-		log.error("[SOUT] >> 登入錯誤");
+		log.error("登入錯誤");
         // 返回是否登入超過次數
-        boolean isLimit = loginTimeLimitService.loginCountLimitProccess(new ServletWebRequest(httpServletRequest), sessionStrategy);
+        boolean isLimit = loginTimeLimitService.CountLimitProccess(
+        		new ServletWebRequest(httpServletRequest), sessionStrategy, 
+        		Constant.SESSION_LOGIN_ERROR_COUNT_NAME, 
+        		Constant.SESSION_MAX_LOGIN_ERROR_COUNT,
+        		Constant.SESSION_LOGIN_ERROR_DUETIME_NAME);
     	/*httpServletResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         httpServletResponse.setContentType("application/json;charset=utf-8");*/
         httpServletResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());

@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.csprs.cbw.filter.ResetPwdFilter;
 import com.csprs.cbw.filter.ValidateCodeFilter;
 import com.csprs.cbw.filter.VertifyPwdFilter;
 import com.csprs.cbw.service.security.LoginFailureHandler;
@@ -32,6 +33,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private ValidateCodeFilter validateCodeFilter;
 	@Autowired
     private VertifyPwdFilter vertifyPwdFilter;
+	@Autowired
+	private ResetPwdFilter resetPwdFilter;
 	
 	@Bean
 	UserDetailsService UserService() {
@@ -55,6 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		http
 			.addFilterBefore(vertifyPwdFilter, UsernamePasswordAuthenticationFilter.class) //添加驗證碼效驗過濾器
+			.addFilterBefore(resetPwdFilter, UsernamePasswordAuthenticationFilter.class) //添加驗證碼效驗過濾器
 			.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class) //添加驗證碼效驗過濾器
 			.authorizeRequests()
 			.antMatchers("/static", "register").permitAll()
@@ -64,6 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/image/**").permitAll()
 			.antMatchers("/handleLogin/forgotPwd").permitAll()
 			.antMatchers("/handleLogin/vertify").permitAll()
+			.antMatchers("/handleLogin/lock").permitAll()
 			.antMatchers("/cwb/**").hasAnyRole("USER", "ADMIN")
 			.antMatchers("/account/**").hasAnyRole("ADMIN")
 			.anyRequest().authenticated()

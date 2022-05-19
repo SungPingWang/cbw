@@ -1,5 +1,7 @@
 package com.csprs.cbw.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.concurrent.Future;
 
 import javax.mail.internet.MimeMessage;
@@ -25,9 +27,15 @@ public class MailService {
 	@Async("executor")
 	public void sendingForgotPwdMail(String token, String mail) {
 		
+		Calendar calendar2 = Calendar.getInstance();
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		calendar2.add(Calendar.DATE, 1);
+		String three_days_after = sdf2.format(calendar2.getTime());
+		System.out.println(three_days_after);
+		
 		try {
 			StringBuffer bf = new StringBuffer();
-			bf.append("你已進行密碼重設動作，若無問題請於一日內點擊");
+			bf.append("你已進行密碼重設動作，若無問題請於").append(three_days_after).append("內點擊");
 			bf.append("<a href='http://localhost:8080/csprscbw/handleLogin/vertify?token="+ token +"'>此連結按鈕</a>");
 			bf.append("進行密碼重設，逾期將無效。感謝您。");
  			// SimpleMailMessage message = new SimpleMailMessage();

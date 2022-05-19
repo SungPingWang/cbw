@@ -22,7 +22,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.csprs.cbw.bean.system.ImageCode;
 import com.csprs.cbw.controller.system.ValidateController;
 import com.csprs.cbw.exception.ValidateCodeException;
-import com.csprs.cbw.service.security.LoginTimeLimitService;
+import com.csprs.cbw.service.security.TimeLimitService;
+import com.csprs.cbw.util.Constant;
 
 
 //@Order(1)
@@ -35,7 +36,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
 	@Autowired
     private AuthenticationFailureHandler authenticationFailureHandler;
 	@Autowired
-	private LoginTimeLimitService loginTimeLimitService;
+	private TimeLimitService loginTimeLimitService;
 	// 引入 session
     private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
 
@@ -125,7 +126,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
     	/* 調用checkUnLockTime()方法
     	 * 查看session中的鎖定時間是不是已經過了
     	 * */
-    	boolean checkUnLockTime = loginTimeLimitService.checkUnLockTime(servletWebRequest, sessionStrategy);
+    	boolean checkUnLockTime = loginTimeLimitService.checkUnLockTime(servletWebRequest, sessionStrategy, Constant.SESSION_LOGIN_ERROR_DUETIME_NAME);
 		if(checkUnLockTime) { // 還在鎖定時間
 			log.info("[SOUT] >> 鎖定期間");
 			/* 跳出ValidateCodeException抱錯
