@@ -1,8 +1,6 @@
 package com.csprs.cbw.filter;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.csprs.cbw.exception.ValidateCodeException;
 import com.csprs.cbw.service.security.TimeLimitService;
 import com.csprs.cbw.util.Constant;
 
@@ -38,9 +35,9 @@ public class ResetPwdFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 		
 		boolean isTimeLimit = validateTimeLimit(new ServletWebRequest(request), response, sessionStrategy);
-		System.out.println(request.getRequestURI());
-		if(isTimeLimit && !"/csprscbw/handleLogin/lock".equals(request.getRequestURI())) {
-			response.sendRedirect("/csprscbw/handleLogin/lock");
+		if(isTimeLimit && !Constant.LOCK_PATH.equals(request.getRequestURI())) {
+			log.warn("重設密碼次數過多進入鎖定期間");
+			response.sendRedirect(Constant.LOCK_PATH);
 			return;
 		}
 		

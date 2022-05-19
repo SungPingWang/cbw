@@ -15,20 +15,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.csprs.cbw.util.Constant;
+
 // 在進行密碼重設的時候理論上是已經登入的了，所以要避免使用者直接壞壞想要直接進入主頁面
 @Component
 public class VertifyPwdFilter extends OncePerRequestFilter {
 	
 	// 引入 session
     private SessionStrategy sessionStrategy = new HttpSessionSessionStrategy();
-    
-    private static String LOGIN_PATH = "/csprscbw/login";
-    private static String CAPTCHA_PATH = "/csprscbw/code/image";
-    private static String ERROR_PATH = "/csprscbw/error";
-    private static String VERTIFY_PWD_PATH = "/csprscbw/handleLogin/vertify";
-    private static String RESET_PWD_PATH = "/csprscbw/handleLogin/resetPwd";
-    private static String LOCK_PATH = "/csprscbw/handleLogin/lock";
-    private static String VERTIFY_SESSION = "vertifyState";
 
 
 	@Override
@@ -46,20 +40,20 @@ public class VertifyPwdFilter extends OncePerRequestFilter {
 
 		
 		// 1 判斷是否是在驗證密碼重設階段
-		if(url.startsWith(VERTIFY_PWD_PATH)) {
+		if(url.startsWith(Constant.VERTIFY_PWD_PATH)) {
 			// 設定session為1
-			sessionStrategy.setAttribute(servletWebRequest, VERTIFY_SESSION, "1");
+			sessionStrategy.setAttribute(servletWebRequest, Constant.VERTIFY_SESSION, "1");
 		// 2 若不為判斷1，如果去了login以外的頁面都必須要返回
 		}else if(
-				!url.startsWith(LOGIN_PATH) && !isStatic 
-				&& !url.startsWith(RESET_PWD_PATH) 
-				&& !url.startsWith(ERROR_PATH)
-				&& !url.startsWith(CAPTCHA_PATH)
-				&& !url.startsWith(LOCK_PATH)){
-			System.out.println("有人在亂喔: " + url);
-			Object vertifyState = sessionStrategy.getAttribute(servletWebRequest, VERTIFY_SESSION);
+				!url.startsWith(Constant.LOGIN_PATH) && !isStatic 
+				&& !url.startsWith(Constant.RESET_PWD_PATH) 
+				&& !url.startsWith(Constant.ERROR_PATH)
+				&& !url.startsWith(Constant.CAPTCHA_PATH)
+				&& !url.startsWith(Constant.LOCK_PATH)){
+			//System.out.println("有人在亂喔: " + url);
+			Object vertifyState = sessionStrategy.getAttribute(servletWebRequest, Constant.VERTIFY_SESSION);
 			if("1".equals((String)vertifyState)) {
-				response.sendRedirect(LOGIN_PATH);
+				response.sendRedirect(Constant.LOGIN_PATH);
 				return;
 			}
 		}

@@ -15,8 +15,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.csprs.cbw.filter.ResetPwdFilter;
 import com.csprs.cbw.filter.ValidateCodeFilter;
 import com.csprs.cbw.filter.VertifyPwdFilter;
-import com.csprs.cbw.service.security.LoginFailureHandler;
-import com.csprs.cbw.service.security.LoginSuccessHandler;
+import com.csprs.cbw.handler.LoginFailureHandler;
+import com.csprs.cbw.handler.LoginSuccessHandler;
 import com.csprs.cbw.service.security.UserSecurityService;
 
 
@@ -57,9 +57,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		
 		http
-			.addFilterBefore(vertifyPwdFilter, UsernamePasswordAuthenticationFilter.class) //添加驗證碼效驗過濾器
-			.addFilterBefore(resetPwdFilter, UsernamePasswordAuthenticationFilter.class) //添加驗證碼效驗過濾器
-			.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class) //添加驗證碼效驗過濾器
+			.addFilterBefore(vertifyPwdFilter, UsernamePasswordAuthenticationFilter.class) // 添加寄信效驗過濾器
+			.addFilterBefore(resetPwdFilter, UsernamePasswordAuthenticationFilter.class) // 添加重寫密碼效驗過濾器
+			.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class) // 添加驗證碼效驗過濾器
 			.authorizeRequests()
 			.antMatchers("/static", "register").permitAll()
 			.antMatchers("/login").permitAll()

@@ -37,6 +37,9 @@ public class MyProfile implements Serializable {
 	@Column(name = "description")
 	private String description;
 	
+	@Column(name = "mail")
+	private String mail;
+	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "account_role", joinColumns = {@JoinColumn(name = "a_id")}, 
 		inverseJoinColumns = {@JoinColumn(name = "r_id")})
@@ -74,6 +77,15 @@ public class MyProfile implements Serializable {
 		this.description = description;
 	}
 
+	public String getMail() {
+		return mail;
+	}
+
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
+	
+
 	public String getRoles() {
 		String finalString = "";
 		for (int i = 0; i < roles.size(); i++) {
@@ -93,8 +105,7 @@ public class MyProfile implements Serializable {
 	@Override
 	public String toString() {
 		return "MyProfile [id=" + id + ", name=" + name + ", password=" + password + ", description=" + description
-				+ ", roles= ]";
+				+ ", mail=" + mail + "]";
 	}
-	
 	
 }

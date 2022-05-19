@@ -47,12 +47,15 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
     	/* @validateTimeLimit() 實現
     	 * 判斷是不是因為登入錯誤太多次被鎖住的帳號
     	 * */
-    	try {
-    		validateTimeLimit(new ServletWebRequest(httpServletRequest), httpServletResponse, sessionStrategy);
-        } catch (ValidateCodeException e) {
-            authenticationFailureHandler.onAuthenticationFailure(httpServletRequest, httpServletResponse, e);
-            return;
-        }
+    	if(!"/csprscbw/handleLogin/lock".equals(httpServletRequest.getRequestURI())) {
+    		try {
+        		validateTimeLimit(new ServletWebRequest(httpServletRequest), httpServletResponse, sessionStrategy);
+            } catch (ValidateCodeException e) {
+                authenticationFailureHandler.onAuthenticationFailure(httpServletRequest, httpServletResponse, e);
+                return;
+            }
+    	}
+    	
     	/* @validateCode() 實現
     	 * 如果是POST方法，並且在進行登入的時候(/security/login 路徑)
     	 * 則開始在validateCode方法中添加對圖形驗證碼的功能

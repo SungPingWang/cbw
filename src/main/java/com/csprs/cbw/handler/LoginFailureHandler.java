@@ -1,4 +1,4 @@
-package com.csprs.cbw.service.security;
+package com.csprs.cbw.handler;
 
 import java.io.IOException;
 
@@ -17,6 +17,7 @@ import org.springframework.social.connect.web.SessionStrategy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.ServletWebRequest;
 
+import com.csprs.cbw.service.security.TimeLimitService;
 import com.csprs.cbw.util.Constant;
 
 
@@ -49,9 +50,11 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         httpServletResponse.setContentType("text/html;charset=utf-8");
         // 把先前 throw new ValidateCodeException("驗證碼 ERROR"); 錯誤丟入輸出	 
         if (isLimit) {
-			httpServletResponse.getWriter().print("<p>驗證次數過多,你已被鎖定登入1分鐘，請稍後再試...</p>");
+			//httpServletResponse.getWriter().print("<p>驗證次數過多,你已被鎖定登入1分鐘，請稍後再試...</p>");
+        	httpServletResponse.sendRedirect("/csprscbw/handleLogin/lock");
 		}else if("TimeLimitError".equals(e.getMessage())) {
-			httpServletResponse.getWriter().print("<p>你已被鎖定登入1分鐘，提醒您不斷嘗試刷新頁面將重新計算鎖定時間...</p>");
+			//httpServletResponse.getWriter().print("<p>你已被鎖定登入1分鐘，提醒您不斷嘗試刷新頁面將重新計算鎖定時間...</p>");
+			httpServletResponse.sendRedirect("/csprscbw/handleLogin/lock");
 		}else {
 			//httpServletResponse.getWriter().write(objectMapper.writeValueAsString(e.getMessage()));
 			try {

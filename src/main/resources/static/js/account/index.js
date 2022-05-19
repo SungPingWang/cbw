@@ -6,8 +6,9 @@ var alterBean = function (msg) {
     var id = th_tag[0].innerHTML;
     var name = td_tag[0].innerHTML;
     var password = td_tag[1].innerHTML;
-    var description = td_tag[2].innerHTML;
-    var role = td_tag[3].innerHTML;
+	var mail = td_tag[2].innerHTML;
+    var description = td_tag[3].innerHTML;
+    var role = td_tag[4].innerHTML;
 
     console.log(role);
     var role_split = role.split(",");
@@ -30,6 +31,7 @@ var alterBean = function (msg) {
     document.getElementById("inputId").value = id;
     document.getElementById("inputName").value = name;
     document.getElementById("inputPassword").value = password;
+	document.getElementById("inputMail").value = mail;
     document.getElementById("inputDescription").value = description;
 }
 var alterAccount = function () {

@@ -38,7 +38,11 @@
 		    </div>
 		  </div>
 		  <div class="form-row">
-		    <div class="form-group col-md-12">
+			<div class="form-group col-md-6">
+		      <label for="inputMail">信箱輸入</label> 
+		      <input type="email" class="form-control" id="inputMail" name="mail" placeholder="mail" required>
+		    </div>
+		    <div class="form-group col-md-6">
 		      <label for="inputDescription">使用者描述</label> 
 		      <input type="text" class="form-control" id="inputDescription" name="description" placeholder="Description" required>
 		    </div>
@@ -68,7 +72,7 @@
 		  </div>
 		  <div class="form-group row">
 		  	<div class="col-sm-10">
-				<h5 class="btn btn-primary" onclick="alterAccount()">Add-Update</h5>
+				<h5 class="btn btn-primary" onclick="alterAccount()">編輯/更新</h5>
 	<!-- 		<button type="submit" class="btn btn-primary float-right">Add-Update</button> -->
 			</div>
 		  </div>
@@ -80,9 +84,10 @@
 			<table class="table table-striped">
 				<thead>
 					<tr>
-				    	<th style="width: 10%">#</th>
+				    	<th style="width: 10%; display:none">#</th>
 				     	<th style="width: 10%">帳號</th>
-				      	<th style="width: 20%">密碼</th>
+				      	<th style="width: 10%">密碼</th>
+						<th style="width: 10%">信箱</th>
 				      	<th style="width: 20%">使用者描述</th>
 				      	<th style="width: 20%">權限</th>
 				      	<th style="width: 20%">功能</th>
@@ -90,9 +95,10 @@
 				</thead>
 				<tbody>
 				  	<tr th:each="MyBean: ${listPage}">
-				  		<th style="width: 10%" th:text="${MyBean.id}">id</th>
+				  		<th style="width: 10%; display:none" th:text="${MyBean.id}">id</th>
 				  		<td style="width: 10%" th:text="${MyBean.name}">name</td>
-				  		<td style="width: 20%" th:text="${MyBean.password}">password</td>
+				  		<td style="width: 10%" th:text="${MyBean.password}">password</td>
+						<td style="width: 10%" th:text="${MyBean.mail}">mail</td>
 				  		<td style="width: 20%" th:text="${MyBean.description}">description</td>
 				  		<td style="width: 20%" th:text="${MyBean.roles}">roles</td>
 				  		<div th:if="${#session.getAttribute('UserRole')} ne ${MyBean.name}">

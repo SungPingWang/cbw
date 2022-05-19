@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -71,16 +70,16 @@ public class LoginOutController {
 		// 1 設定token逾時時間
 		Long datetime = System.currentTimeMillis() + Long.parseLong(TOKEN_EXPIRED);
 		// 2 判斷帳號是不是在資料庫內的
-		int isExisted = myProfileDaoImpl.checkAccountExist(acc);
 		// 3 這裡要多判斷對應的帳號是不是有mail
-		if(isExisted >= 1) {
+		MyProfile profile = myProfileDaoImpl.findByName(acc);
+		if(profile != null && profile.getMail() != null && !"".equals(profile.getMail().trim())) {
 			// 4 和輸入的帳號進行組合
 			String concatToken = acc + ":" + datetime;
 			// 5 加密token
 			String token = EncryptDecrypt.encryptAES(concatToken, KEY, TRANSFORMATION, ALGORITHM);
 			// 6 傳送mail到指定的帳號信箱內
-			mailService.sendingForgotPwdMail(token, "t124650401@gmail.com");
-			logger.info("發送" + acc + "重設密碼驗證信息： " + "t124650401@gmail.com");
+			mailService.sendingForgotPwdMail(token, profile.getMail());
+			logger.info("發送" + acc + "重設密碼驗證信息： " + profile.getMail());
 			redirectAttributes.addFlashAttribute("errorMsg", "成功發送密碼驗證信息到信箱，請耐心等候。");
 			return "redirect:/login";
 		}else { // 如果找不到mail的話就只能回到忘記密碼的頁面了
