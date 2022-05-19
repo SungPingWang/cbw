@@ -15,9 +15,9 @@
 <body class="center">
 	<main class="form-signin">
 		<form th:action="@{/login}" method="post">
-			<div th:if="${param.error}">bad user or password</div>
-			<div th:if="${param.logout}">you have been logged out</div>
-			<div th:text="${errorMsg}"></div>
+			<div class="text-center" th:if="${param.error}">帳號密碼錯誤</div>
+			<div class="text-center" th:if="${param.logout}">登出成功</div>
+			<div class="text-center" th:text="${errorMsg}"></div>
 			<h1 class="h3 mb-3 fw-normal text-center">
 				系統
 				<img th:src="@{/image/login.png}" width="40" height="40">
@@ -36,11 +36,13 @@
 				<input type="text" class="mb-1" name="imageCode" placeholder="驗證碼" style="width: 63%;" /> 
 				<img src="/csprscbw/code/image" style="border: 2px solid #212529;" />
 			</span>
+			<!--
 			<div class="checkbox mb-1">
 				<label> <input type="checkbox" value="remember-me"
 					name="remember-me"> 記住我
 				</label>
 			</div>
+			-->
 			<button class="w-100 btn btn-lg btn-primary btn-sm mb-1" type="submit">登入</button>
 			<a class="w-100 btn btn-lg btn-secondary btn-sm" type="submit" href="/csprscbw/handleLogin/forgotPwd">忘記密碼</a>
 		</form>

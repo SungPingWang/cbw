@@ -81,9 +81,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 			.logout()
 			.and()
-			.csrf().disable()
-            .rememberMe()
-            .tokenValiditySeconds(3600);
+			.csrf().disable();
+            //.rememberMe()
+            //.tokenValiditySeconds(3600);
 	}
 	
 	

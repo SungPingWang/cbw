@@ -30,6 +30,7 @@ public class MyProfileService {
 			String password = addupdate_split[2];
 			String description = addupdate_split[3];
 			String roles = addupdate_split[4];
+			String mail = addupdate_split[5];
 			List<MyRole> roleListBean = myRoleService.getRoleListBean(roles);
 			
 			if("".equals(id)) {
@@ -38,6 +39,7 @@ public class MyProfileService {
 				profile.setPassword(password);
 				profile.setDescription(description);
 				profile.setRoles(roleListBean);
+				profile.setMail(mail);
 				int checkAccountExist = myProfileDaoImpl.checkAccountExist(name);
 				if(checkAccountExist > 0) {
 					result_status += "exist account name !!!";
@@ -46,7 +48,7 @@ public class MyProfileService {
 				};
 				
 			}else {
-				myProfileDaoImpl.updateProfile(id, name, password, description, roleListBean);
+				myProfileDaoImpl.updateProfile(id, name, password, description, roleListBean, mail);
 			}
 		} catch (Exception e) {
 			logger.error(e.toString());

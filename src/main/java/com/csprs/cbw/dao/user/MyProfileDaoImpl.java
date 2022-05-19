@@ -45,7 +45,7 @@ public class MyProfileDaoImpl {
 	}
 	
 	@Transactional
-	public void updateProfile(String id, String name, String password, String description, List<MyRole> roles) {
+	public void updateProfile(String id, String name, String password, String description, List<MyRole> roles, String mail) {
 		try {
 			long id_long = Long.parseLong(id);
 			MyProfile profile = myProfileRepository.findById(id_long).get(0);
@@ -53,6 +53,7 @@ public class MyProfileDaoImpl {
 			profile.setPassword(password);
 			profile.setDescription(description);
 			profile.setRoles(roles);
+			profile.setMail(mail);
 			// System.out.println(profile);
 			myProfileRepository.save(profile);
 			System.out.println("Update the Profile in dao");

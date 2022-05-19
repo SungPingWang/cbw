@@ -8,9 +8,9 @@ var alterBean = function (msg) {
     var password = td_tag[1].innerHTML;
 	var mail = td_tag[2].innerHTML;
     var description = td_tag[3].innerHTML;
-    var role = td_tag[4].innerHTML;
+    var role = td_tag[4].getElementsByTagName("p")[0].innerHTML;
 
-    console.log(role);
+    console.log(td_tag[4].getElementsByTagName("p")[0].innerHTML);
     var role_split = role.split(",");
     if (role_split.includes("ADMIN")) {
         document.getElementById("roleCheck1").checked = true;
@@ -38,6 +38,7 @@ var alterAccount = function () {
     var select_id = $('#inputId').val();
     var select_name = $('#inputName').val();
     var select_pwd = $('#inputPassword').val();
+	var select_mail = $('#inputMail').val();
     var select_desp = $('#inputDescription').val();
     var select_chk1 = document.getElementById("roleCheck1");
     var select_chk2 = document.getElementById("roleCheck2");
@@ -54,9 +55,9 @@ var alterAccount = function () {
     }
     var role_cnt_str = role_cnt.toString();
     // 可能要考慮不用逗號分隔，因為description有可能就會有逗號
-    var ajaxInput = select_id + ";" + select_name + ";" + select_pwd + ";" + select_desp + ";" + role_cnt_str;
+    var ajaxInput = select_id + ";" + select_name + ";" + select_pwd + ";" + select_desp + ";" + role_cnt_str + ";" + select_mail;
     var sure = confirm("are you sure to add new account or update?");
-    if (sure && role_cnt != 0 && select_name != "" && select_name != "" && select_pwd != "" && select_desp != "") {
+    if (sure && role_cnt != 0 && select_name != "" && select_name != "" && select_pwd != "" && select_desp != "" && select_mail != "") {
         $.ajax({
             url: "/csprscbw/account/addUpdate",
             type: "POST",
