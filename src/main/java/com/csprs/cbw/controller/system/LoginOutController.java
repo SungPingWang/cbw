@@ -2,6 +2,8 @@ package com.csprs.cbw.controller.system;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,7 +108,8 @@ public class LoginOutController {
 	
 	@PostMapping("/resetPwd")
 	public String resetPwd(String pwd1, String pwd2, 
-			Map<String, Object> map) throws Exception {
+			Map<String, Object> map, HttpSession session) throws Exception {
+		
 		String account = SecurityContextHolder.getContext().getAuthentication().getName();
 		if(!pwd1.equals(pwd2) || pwd1 == null || pwd2 == null) {
 			logger.warn("密碼重設失敗： " + account);
@@ -114,6 +117,7 @@ public class LoginOutController {
 			return "system/resetPassword.html";
 		}else {
 			logger.info("密碼重設成功： " + account);
+			session.setAttribute("vertifyState", "0");
 			return "redirect:/cwb/index";
 		}
 		

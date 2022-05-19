@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.csprs.cbw.filter.ValidateCodeFilter;
+import com.csprs.cbw.filter.VertifyPwdFilter;
 import com.csprs.cbw.service.security.LoginFailureHandler;
 import com.csprs.cbw.service.security.LoginSuccessHandler;
 import com.csprs.cbw.service.security.UserSecurityService;
@@ -29,6 +30,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private LoginFailureHandler loginFailureHandler;
 	@Autowired
     private ValidateCodeFilter validateCodeFilter;
+	@Autowired
+    private VertifyPwdFilter vertifyPwdFilter;
 	
 	@Bean
 	UserDetailsService UserService() {
@@ -51,6 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		
 		http
+			.addFilterBefore(vertifyPwdFilter, UsernamePasswordAuthenticationFilter.class) //添加驗證碼效驗過濾器
 			.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class) //添加驗證碼效驗過濾器
 			.authorizeRequests()
 			.antMatchers("/static", "register").permitAll()

@@ -30,6 +30,13 @@ class CsprsCbwApplicationTests {
 	private final Logger logger = LoggerFactory.getLogger("CustomOperateLog");
 	
 	@Test
+	void testSplit() {
+		String delimiter = "\\.";
+		String text = "123.png";
+		System.out.println(text.split(delimiter).length);
+	}
+	
+	@Test
 	void contextLoads() {
 		List<cbwstation> cbwstationsView = cbwService.getShowCbwstations();
 		System.out.println(cbwstationsView);
