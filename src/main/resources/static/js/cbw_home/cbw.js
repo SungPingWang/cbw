@@ -44,11 +44,11 @@ $(document).ready(function () {
 // station20Cbwbeans Json文字，weatherJson 天氣JSON - PNG，weatherType 需要的欄位名稱
 var weatherStation20Process = function (station20Cbwbeans, weatherJson, weatherType) {
     var station20CbwJson = JSON.parse(station20Cbwbeans.replaceAll("'", "\"").replaceAll(">", "大於"));
-    var cardDeckHtml1 = "<div class='card-deck'>";
-    var cardDeckHtml2 = "<div class='card-deck'>";
-    var cardDeckHtml3 = "<div class='card-deck'>";
-    var cardDeckHtml4 = "<div class='card-deck'>";
-    var cardDeckHtml5 = "<div class='card-deck'>";
+    var cardDeckHtml1 = "<div class='row'>";
+    var cardDeckHtml2 = "<div class='row'>";
+    var cardDeckHtml3 = "<div class='row'>";
+    var cardDeckHtml4 = "<div class='row'>";
+    var cardDeckHtml5 = "<div class='row'>";
 
     for (var i = 0; i < station20CbwJson.length; i++) {
         var temp_json = station20CbwJson[i];
@@ -66,34 +66,34 @@ var weatherStation20Process = function (station20Cbwbeans, weatherJson, weatherT
         }
 
         if (i == 0 || i == 1 || i == 2 || i == 3) {
-            html = "<div class='card border-info'>" +
+            html = "<div class='col-sm-3'><div class='card border-info'>" +
                 "<button id='" + temp_json['station'] + "' class='card-header mainStation btn' onclick='mainStationClick(this);'>" +
                 temp_json['station'] + "&nbsp <img width='40' height='40' src='" + weatherPng + "'><br>" + weatherTypeText +
-                "</button></div>";
+                "</button></div></div>";
             cardDeckHtml1 += html;
         } else if (i == 4 || i == 5 || i == 6 || i == 7) {
-            html = "<div class='card border-info'>" +
+            html = "<div class='col-sm-3'><div class='card border-info'>" +
                 "<button id='" + temp_json['station'] + "' class='card-header mainStation btn' onclick='mainStationClick(this);'>" +
                 temp_json['station'] + "&nbsp <img width='40' height='40' src='" + weatherPng + "'><br>" + weatherTypeText +
-                "</button></div>";
+                "</button></div></div>";
             cardDeckHtml2 += html;
         } else if (i == 8 || i == 9 || i == 10 || i == 11) {
-            html = "<div class='card border-info'>" +
+            html = "<div class='col-sm-3'><div class='card border-info'>" +
                 "<button id='" + temp_json['station'] + "' class='card-header mainStation btn' onclick='mainStationClick(this);'>" +
                 temp_json['station'] + "&nbsp <img width='40' height='40' src='" + weatherPng + "'><br>" + weatherTypeText +
-                "</button></div>";
+                "</button></div></div>";
             cardDeckHtml3 += html;
         } else if (i == 12 || i == 13 || i == 14 || i == 15) {
-            html = "<div class='card border-info'>" +
+            html = "<div class='col-sm-3'><div class='card border-info'>" +
                 "<button id='" + temp_json['station'] + "' class='card-header mainStation btn' onclick='mainStationClick(this);'>" +
                 temp_json['station'] + "&nbsp <img width='40' height='40' src='" + weatherPng + "'><br>" + weatherTypeText +
-                "</button></div>";
+                "</button></div></div>";
             cardDeckHtml4 += html;
         } else {
-            html = "<div class='card border-info'>" +
+            html = "<div class='col-sm-3'><div class='card border-info'>" +
                 "<button id='" + temp_json['station'] + "' class='card-header mainStation btn' onclick='mainStationClick(this);'>" +
                 temp_json['station'] + "&nbsp <img width='40' height='40' src='" + weatherPng + "'><br>" + weatherTypeText +
-                "</button></div>";
+                "</button></div></div>";
             cardDeckHtml5 += html;
         }
     }
@@ -102,7 +102,7 @@ var weatherStation20Process = function (station20Cbwbeans, weatherJson, weatherT
     cardDeckHtml2 += "</div><br>";
     cardDeckHtml3 += "</div><br>";
     cardDeckHtml4 += "</div><br>";
-    cardDeckHtml5 += "</div>";
+    cardDeckHtml5 += "</div></div>";
 
     var tatal_html = cardDeckHtml1 + cardDeckHtml2 + cardDeckHtml3 + cardDeckHtml4 + cardDeckHtml5;
     document.getElementById("station20s").innerHTML = tatal_html;

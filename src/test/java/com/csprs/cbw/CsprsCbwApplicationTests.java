@@ -1,7 +1,12 @@
 package com.csprs.cbw;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.httpclient.Cookie;
@@ -10,6 +15,7 @@ import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +24,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.csprs.cbw.bean.cbw.cbwbean;
 import com.csprs.cbw.bean.cbw.cbwstation;
+import com.csprs.cbw.bean.user.MyProfile;
+import com.csprs.cbw.repository.user.MyProfileRepository;
 import com.csprs.cbw.service.cbw.CbwService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -29,11 +37,25 @@ class CsprsCbwApplicationTests {
 
 	private final Logger logger = LoggerFactory.getLogger("CustomOperateLog");
 	
+	@Autowired
+	private MyProfileRepository myProfileRepository;
+	
 	@Test
 	void testSplit() {
-		String delimiter = "\\.";
-		String text = "123.png";
-		System.out.println(text.split(delimiter).length);
+		String newHistory = "";
+		String newstr = "he";
+		String test1 = "1,2,3";
+		String test2 = "1,2";
+		String test3 = "1";
+		
+		String[] containers = test2.split(",");
+		if(containers.length != 3) {
+			newHistory = String.join(",", containers) +","+ newstr;
+		}else {
+			newHistory = containers[0] +","+ containers[1] + "," + newstr;
+		}
+		System.out.println(newHistory);
+		
 	}
 	
 	@Test

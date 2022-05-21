@@ -1,45 +1,56 @@
 <header th:fragment="header">
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-	  <div class="container-fluid">
-	    <a class="navbar navbar-brand" href="/csprscbw/cwb/index" style="font-size: 20px !important;">
-	    	<img src="/csprscbw/image/gis.png" width="30" height="30"></img>&nbsp;CSPRS CBW
-	    </a>
-	    
-	    
-	    <form class="form-inline my-2 my-lg-0">
-	    	<h6 id="myBtn" onclick="goProfile()">
-		    	<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-person-bounding-box" viewBox="0 0 16 16" style="color: #fff" title="account content">
-				  <path d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1h-3zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5zM.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5z"/>
-				  <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-				</svg>
-		    </h6>
-	    	&nbsp&nbsp&nbsp
-	    	<div title="Logout" style="height: 40px;">
-	    		<a href="/csprscbw/logout">
-		    		<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16" style="color: #fff" title="logout">
-					  <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
-					  <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
-					</svg>
-				</a>
-	    	</div>
-	    </form>
-	  </div>
-	</nav>
-	
-	<div class="container">
-		<div class="position-relative overflow-hidden p-3 p-md-2 m-md-3 text-center bg-light">
-			<div class="btn-group" role="group" aria-label="Basic example">
-			  	<a href="/csprscbw/cbw_station" class="btn btn-outline-info btn-sm">站點</a>
-			  	<a sec:authorize="hasRole('ROLE_ADMIN')" href="/csprscbw/account" class="btn btn-outline-info btn-sm">帳號管理</a>
-			  	<a href="/csprscbw/cwb/index" class="btn btn-outline-info btn-sm">首頁</a>
-			</div>
-		</div>
-	</div>
-	
-	<script>
-		var goProfile = function(){
-			console.log("go Profile");	
-			window.open("/csprscbw/mapping/profile","","height=700,width=1000,scrollbars=no");
-		}
-	</script>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar navbar-brand" href="/csprscbw/cwb/index" style="font-size: 20px !important;">
+                <img src="/csprscbw/image/gis.png" width="30" height="30"></img>&nbsp;CSPRS CBW
+            </a>
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                </ul>
+                <span class="navbar-text">
+                    <div id="myBtn" onclick="goProfile()">
+                        <img src="/csprscbw/image/authentication.png" width="40" height="40"></img>
+                    </div>
+                </span>
+                &nbsp;&nbsp;&nbsp;
+                <span class="navbar-text">
+                    <div title="Logout" style="height: 40px;">
+                        <a href="/csprscbw/logout">
+                            <img src="/csprscbw/image/logout.png" width="40" height="40"></img>
+                        </a>
+                    </div>
+                </span>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container">
+        <div class="position-relative overflow-hidden p-3 p-md-2 m-md-3 text-center bg-light">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <a href="/csprscbw/cbw_station" class="btn btn-outline-secondary btn-sm">站點</a>
+                <a sec:authorize="hasRole('ROLE_ADMIN')" href="/csprscbw/account"
+                    class="btn btn-outline-secondary btn-sm">帳號管理</a>
+                <a href="/csprscbw/cwb/index" class="btn btn-outline-secondary btn-sm">首頁</a>
+                <a class="btn btn-outline-danger btn-sm" data-bs-toggle="collapse" href="#collapseExample" role="button"
+                    aria-expanded="false" aria-controls="collapseExample">
+                    注意
+                </a>
+            </div>
+        </div>
+
+        <div class="collapse" id="collapseExample">
+            <div class="card card-body">
+                 <div th:text= "${session.WarningMsgs}"></div>
+            </div>
+        </div>
+    </div>
+    <br>
+
+    <script>
+        var goProfile = function () {
+            console.log("go Profile");
+            window.open("/csprscbw/mapping/profile", "", "height=700,width=1000,scrollbars=no");
+        }
+    </script>
 </header>

@@ -23,4 +23,9 @@ public class Constant {
 	public final static String LOCK_PATH = "/csprscbw/handleLogin/lock";
 	public final static String VERTIFY_SESSION = "vertifyState";
 	
+	public final static String[] PWD_ALLOW_SYMBOL = {"!", "@", "#", "$", "%", "&", "*"};
+	public final static String[] PWD_NOTALLOW_SYMBOL = {","};
+	
+	/**/
+	public final static String PWD_NOTALLOW_MSG = "您的密碼設定不符合資安規定，請至帳號管理頁面對密碼進行近一步規範的設定。";
 }

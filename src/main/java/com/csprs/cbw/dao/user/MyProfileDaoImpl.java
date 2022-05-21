@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.csprs.cbw.bean.user.MyProfile;
-import com.csprs.cbw.bean.user.MyRole;
 import com.csprs.cbw.repository.user.MyProfileRepository;
 
 
@@ -23,6 +22,7 @@ public class MyProfileDaoImpl {
 	@Autowired
 	public MyProfileRepository myProfileRepository;
 	
+	// get all users
 	@Transactional
 	public List<MyProfile> getAllProfiles(){
 		List<MyProfile> profiles = new ArrayList<>();
@@ -34,40 +34,44 @@ public class MyProfileDaoImpl {
 		return profiles;
 	}
 	
+	// 儲存profile
 	@Transactional
 	public void saveProfile(MyProfile myProfile) {
 		try {
 			myProfileRepository.save(myProfile);
-			System.out.println("Save the Profile in dao");
 		} catch (Exception e) {
 			logger.error(e.toString());
 		}
 	}
 	
+	// 更新profile
 	@Transactional
-	public void updateProfile(String id, String name, String password, String description, List<MyRole> roles, String mail) {
+	public void updateProfile(MyProfile profile) {
 		try {
-			long id_long = Long.parseLong(id);
-			MyProfile profile = myProfileRepository.findById(id_long).get(0);
-			profile.setName(name);
-			profile.setPassword(password);
-			profile.setDescription(description);
-			profile.setRoles(roles);
-			profile.setMail(mail);
-			// System.out.println(profile);
+			MyProfile user = myProfileRepository.findById(profile.getId()).get(0);
+			String pwd3History = "";
+			String[] histories = user.getPwdHistory().split(",");
+			if(histories.length != 3) {
+				pwd3History = String.join(",", histories) +","+ profile.getPwdHistory();
+			}else {
+				pwd3History = histories[1] +","+ histories[2] + "," + profile.getPwdHistory();
+			}
+			profile.setPwdHistory(pwd3History);
+			profile.setCreatedTime(user.getCreatedTime());
 			myProfileRepository.save(profile);
-			System.out.println("Update the Profile in dao");
 		} catch (NumberFormatException e) {
 			logger.error(e.toString());
 		}
 	}
 	
+	// 刪除profile
 	@Transactional
 	public void deleteProfileById(String id) {
 		long id_long = (long) Long.parseLong(id);
 		myProfileRepository.deleteById(id_long);
 	}
 	
+	// 查看profile是否存在
 	@Transactional
 	public int checkAccountExist(String name) {
 		List<MyProfile> profiles = myProfileRepository.findByName(name);
@@ -82,6 +86,8 @@ public class MyProfileDaoImpl {
 		return null;
 	}
 	
-	
-	
+	public MyProfile findById(Long id) {
+		MyProfile profile = myProfileRepository.findById(id).get();
+		return profile;
+	}
 }

@@ -1,9 +1,10 @@
 package com.csprs.cbw.bean.user;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -39,6 +42,17 @@ public class MyProfile implements Serializable {
 	
 	@Column(name = "mail")
 	private String mail;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "last_modified_time")
+	private Date lastModifiedTime;
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "created_time")
+	private Date createdTime;
+	
+	@Column(name = "pwd_history")
+	private String pwdHistory;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "account_role", joinColumns = {@JoinColumn(name = "a_id")}, 
@@ -85,6 +99,8 @@ public class MyProfile implements Serializable {
 		this.mail = mail;
 	}
 	
+	
+	
 
 	public String getRoles() {
 		String finalString = "";
@@ -102,10 +118,34 @@ public class MyProfile implements Serializable {
 		this.roles = roles;
 	}
 
+	public Date getLastModifiedTime() {
+		return lastModifiedTime;
+	}
+
+	public void setLastModifiedTime(Date lastModifiedTime) {
+		this.lastModifiedTime = lastModifiedTime;
+	}
+
+	public Date getCreatedTime() {
+		return createdTime;
+	}
+
+	public void setCreatedTime(Date createdTime) {
+		this.createdTime = createdTime;
+	}
+
+	public String getPwdHistory() {
+		return pwdHistory;
+	}
+
+	public void setPwdHistory(String pwdHistory) {
+		this.pwdHistory = pwdHistory;
+	}
+	
+
 	@Override
 	public String toString() {
 		return "MyProfile [id=" + id + ", name=" + name + ", password=" + password + ", description=" + description
 				+ ", mail=" + mail + "]";
 	}
-	
 }
