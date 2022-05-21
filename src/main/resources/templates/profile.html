@@ -22,11 +22,11 @@
 						  <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
 						</svg>
 			    	</div>
-					<h6 class="my-0 fw-normal">Your Account</h6>
+					<h6 class="my-0 fw-normal">帳號權限</h6>
 				</div>
 				<div class="card-body">
 					<div class="my-3 p-3 bg-white rounded shadow-sm">
-					    <h6 class="border-bottom border-gray pb-2 mb-0">account content</h6>
+					    <h6 class="border-bottom border-gray pb-2 mb-0">帳號內容</h6>
 					    <div sec:authorize="isAuthenticated()" class="media text-muted pt-3">
 					      <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32"><title>Placeholder</title><rect width="100%" height="100%" fill="#e83e8c"/><text x="50%" y="50%" fill="#e83e8c" dy=".3em">32x32</text></svg>
 					      <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
@@ -36,26 +36,26 @@
 					    </div>
 					</div>
 					<div class="my-3 p-3 bg-white rounded shadow-sm">
-					    <h6 class="border-bottom border-gray pb-2 mb-0">account roles</h6>
+					    <h6 class="border-bottom border-gray pb-2 mb-0">角色權限</h6>
 					    <div sec:authorize="hasRole('ROLE_ADMIN')" class="media text-muted pt-3">
 					      <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#e83e8c" dy=".3em"></text></svg>
 					      <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
 					        <strong class="d-block text-gray-dark">@ADMIN ROLE</strong>
-					        you have superuser authentication to do anything, including MANGER, USER. So whatever you have MANAGER or USER roles, you still the god.
+					        本帳號具超級使用者權限。
 					      </p>
 					    </div>
 					    <div sec:authorize="hasRole('ROLE_MANAGER')" class="media text-muted pt-3">
 					      <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32"><title>Placeholder</title><rect width="100%" height="100%" fill="#e83e8c"/><text x="50%" y="50%" fill="#e83e8c" dy=".3em"></text></svg>
 					      <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
 					        <strong class="d-block text-gray-dark">@MANAGER ROLE</strong>
-					        you are the manager, but you don't have ant addition right as normal user unless you are superuser.
+					        本帳號具管理者權限，部分功能可使用。
 					      </p>
 					    </div>
 					    <div sec:authorize="hasRole('ROLE_USER')" class="media text-muted pt-3">
 					      <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32"><title>Placeholder</title><rect width="100%" height="100%" fill="#6f42c1"/><text x="50%" y="50%" fill="#e83e8c" dy=".3em"></text></svg>
 					      <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
 					        <strong class="d-block text-gray-dark">@USER ROLE</strong>
-					        you are the normal user or client, you have no power here, but don't worry, so do your managers. Unless you are superuser.
+					        本帳號具使用者權限，部分功能可使用。
 					      </p>
 					    </div>
 					</div>

@@ -62,7 +62,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
     	 * */
     	if (httpServletRequest.getRequestURI().startsWith("/csprscbw/login")
                 && "post".equalsIgnoreCase(httpServletRequest.getMethod())) {
-    		log.info("[SOUT] >> 先跑圖形驗證");
+    		log.info("先跑圖形驗證");
             try {
                 validateCode(new ServletWebRequest(httpServletRequest), httpServletResponse);
             } catch (ValidateCodeException e) {
@@ -81,7 +81,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
     private void validateCode(ServletWebRequest servletWebRequest, HttpServletResponse response) 
     		throws ServletRequestBindingException, ValidateCodeException, IOException {
 
-    	log.info("[SOUT] >> 進行登入驗證碼操作");
+    	log.info("進行登入驗證碼操作");
     	// 提取先前生成的驗證碼答案
     	ImageCode codeInSession = (ImageCode) sessionStrategy.getAttribute(servletWebRequest, ValidateController.SESSION_KEY_IMAGE_CODE);
     	// 提取頁面寫入的驗證碼參數
@@ -90,11 +90,11 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
         String errorCount = "";
         
         if (codeInRequest.isEmpty()) {
-        	log.info("[SOUT] >> 登入驗證碼為空");
+        	log.info("登入驗證碼為空");
         	errorCount = errorCount + "1";
         }
         if (codeInSession == null) {
-        	log.info("[SOUT] >> 沒有登入驗證碼");
+        	log.info("沒有登入驗證碼");
         	errorCount = errorCount + "2";
         }
         if (codeInSession.isExpire()) {
@@ -103,12 +103,12 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
         		sessionStrategy.removeAttribute(servletWebRequest, ValidateController.SESSION_KEY_IMAGE_CODE);
         	}
             // 過期我就不給他說是錯的好了
-            log.info("[SOUT] >> 驗證碼過期");
+            log.info("驗證碼過期");
             // throw new ValidateCodeException("驗證碼已過期！");
             errorCount = errorCount + "3";
         }
         if (!codeInRequest.equalsIgnoreCase(codeInSession.getCode())) {
-        	log.info("[SOUT] >> 登入驗證碼錯誤");
+        	log.info("登入驗證碼錯誤");
         	errorCount = errorCount + "4";
         }
         if(!"".equals(errorCount)) {
@@ -131,7 +131,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
     	 * */
     	boolean checkUnLockTime = loginTimeLimitService.checkUnLockTime(servletWebRequest, sessionStrategy, Constant.SESSION_LOGIN_ERROR_DUETIME_NAME);
 		if(checkUnLockTime) { // 還在鎖定時間
-			log.info("[SOUT] >> 鎖定期間");
+			log.info("鎖定期間");
 			/* 跳出ValidateCodeException抱錯
         	 * 將錯誤訊息交由外面的authenticationFailureHandler進行蒐集
         	 * */

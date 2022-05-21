@@ -1,6 +1,7 @@
 package com.csprs.cbw.handler;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -24,17 +25,14 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws ServletException, IOException {
-		System.out.println("成功");
 		String name = authentication.getName();
 		//Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities(); // [ROLE_ADMIN, ROLE_USER]
 		HttpSession session = request.getSession();
 		session.setAttribute("UserRole", name);
 		// 這裡可以針對一些警告進行session的設定，像是密碼不符合資安
-		String checkWarningMessage = latestNewService.checkWarningMessage(name);
-		if(!"".equals(checkWarningMessage)) {
-			session.setAttribute("WarningMsgs", checkWarningMessage);
-		}
-		response.sendRedirect(request.getContextPath());
+		List<String> checkWarningMessage = latestNewService.checkWarningMessage(name);
+		session.setAttribute("WarningMsgs", checkWarningMessage);
+		response.sendRedirect(request.getContextPath() + "/cwb/index");
 	}
 
 	

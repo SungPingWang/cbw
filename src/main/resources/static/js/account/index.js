@@ -2,15 +2,19 @@ var alterBean = function (msg) {
     var th_tag = msg.parentElement.parentElement.getElementsByTagName("th");
     var td_tag = msg.parentElement.parentElement.getElementsByTagName("td");
 
-
     var id = th_tag[0].innerHTML;
-    var name = td_tag[0].innerHTML;
-    var password = td_tag[1].innerHTML;
-	var mail = td_tag[2].innerHTML;
-    var description = td_tag[3].innerHTML;
+    var name = replaceInput(td_tag[0].innerHTML);
+    var password = replaceInput(td_tag[1].innerHTML);
+	var mail = replaceInput(td_tag[2].innerHTML);
+    var description = replaceInput(td_tag[3].innerHTML);
     var role = td_tag[4].getElementsByTagName("p")[0].innerHTML;
 
-    console.log(td_tag[4].getElementsByTagName("p")[0].innerHTML);
+	// 驗證階段
+	if(!select_mail.includes("@")){
+		alert("信箱錯誤!!");
+		return false;
+	}
+	
     var role_split = role.split(",");
     if (role_split.includes("ADMIN")) {
         document.getElementById("roleCheck1").checked = true;
@@ -36,13 +40,20 @@ var alterBean = function (msg) {
 }
 var alterAccount = function () {
     var select_id = $('#inputId').val();
-    var select_name = $('#inputName').val();
-    var select_pwd = $('#inputPassword').val();
-	var select_mail = $('#inputMail').val();
-    var select_desp = $('#inputDescription').val();
+    var select_name = replaceInput($('#inputName').val());
+    var select_pwd = replaceInput($('#inputPassword').val());
+	var select_mail = replaceInput($('#inputMail').val());
+    var select_desp = replaceInput($('#inputDescription').val());
     var select_chk1 = document.getElementById("roleCheck1");
     var select_chk2 = document.getElementById("roleCheck2");
     var select_chk3 = document.getElementById("roleCheck3");
+
+	// 驗證階段
+	if(!select_mail.includes("@")){
+		alert("信箱錯誤!!");
+		return false;
+	}
+
     var role_cnt = 0;
     if (select_chk1.checked) {
         role_cnt += 1;
@@ -78,3 +89,7 @@ var alterAccount = function () {
         alert("you have to write down all the form");
     }
 };
+
+var replaceInput = function(element) {
+	return element.replaceAll(';', ',');
+}

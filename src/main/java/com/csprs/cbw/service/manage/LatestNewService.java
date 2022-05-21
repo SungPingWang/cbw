@@ -1,5 +1,8 @@
 package com.csprs.cbw.service.manage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +20,14 @@ public class LatestNewService {
 	private MyProfileDaoImpl profileDaoImpl;
 
 	// 獲取警告
-	public String checkWarningMessage(String account) {
-		String result = "";
+	public List<String> checkWarningMessage(String account) {
+		List<String> resultLst = new ArrayList<String>();
 		MyProfile profile = profileDaoImpl.findByName(account);
 		String passwordPass = profileService.isPasswordPass(profile.getPassword());
 		if(!"".equals(passwordPass)) {
-			result = Constant.PWD_NOTALLOW_MSG;
+			resultLst.add(Constant.PWD_NOTALLOW_MSG);
 		}
-		return result;
+		return resultLst;
 	}
 	
 }
