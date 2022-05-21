@@ -1,6 +1,10 @@
 package com.csprs.cbw.util;
 
 public class Constant {
+	
+	public static final String ROLE_ADMIN = "ROLE_ADMIN";
+	public static final String ROLE_MANAGER = "ROLE_MANAGER";
+	public static final String ROLE_USER = "ROLE_USER";
 
 	public static final int UNLOCK_TIME_MIN = 1; // 登入封鎖期限(分鐘)
 	/* 登入錯誤 */
@@ -26,6 +30,8 @@ public class Constant {
 	public final static String[] PWD_ALLOW_SYMBOL = {"!", "@", "#", "$", "%", "&", "*"};
 	public final static String[] PWD_NOTALLOW_SYMBOL = {","};
 	
-	/**/
+	/* 警告語 */
 	public final static String PWD_NOTALLOW_MSG = "您的密碼設定不符合資安規定，請至帳號管理頁面對密碼進行近一步規範的設定。";
+	public final static String MAIL_NOTEXIST_MSG = "您的個人資料尚未填入信箱，請進行更新（測試）";
+	public final static String PWD_EXPIRED_MSG = "您的密碼已多個月並未進行更改，請更改密碼確保安全（測試）";
 }

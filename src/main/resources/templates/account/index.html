@@ -51,7 +51,7 @@
             <input type="text" class="form-control" id="inputDescription" name="description" placeholder="Description"
                 required>
         </div>
-        <div class="col-md-12">
+        <div sec:authorize="hasRole('ROLE_ADMIN')" class="col-md-12">
             <div class="col-sm-2">權限設定</div>
             <div class="col-sm-10">
                 <div class="form-check">

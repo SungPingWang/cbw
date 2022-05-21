@@ -113,6 +113,10 @@ public class MyProfile implements Serializable {
 		}
 		return finalString;
 	}
+	
+	public List<MyRole> getRolesList() {
+		return roles;
+	}
 
 	public void setRoles(List<MyRole> roles) {
 		this.roles = roles;

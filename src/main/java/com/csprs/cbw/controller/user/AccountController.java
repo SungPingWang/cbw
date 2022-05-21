@@ -1,12 +1,14 @@
 package com.csprs.cbw.controller.user;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,9 +22,10 @@ import com.csprs.cbw.dao.user.MyProfileDaoImpl;
 import com.csprs.cbw.service.page.PaginationInterface;
 import com.csprs.cbw.service.page.PaginationService;
 import com.csprs.cbw.service.user.MyProfileService;
+import com.csprs.cbw.util.Constant;
 
 
-@Secured("hasRole('ROLE_ADMIN')")
+//@Secured("hasRole('ROLE_ADMIN')")
 @Controller
 @RequestMapping("/account")
 public class AccountController {
@@ -37,12 +40,23 @@ public class AccountController {
 	@GetMapping()
 	public String index(Map<String, Object> map, 
 			@RequestParam(value = "page", defaultValue = "1") Integer page) {
+		
+		List<MyProfile> pageBeans = new ArrayList<>();
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String user = authentication.getName();
+		boolean admin_role = authentication.getAuthorities().stream().anyMatch(a -> Constant.ROLE_ADMIN.equals(a.getAuthority()));
+		
 		if(page == 0) {
 			map.put("warning", "'page' not found error !!!");
 			page = 1;
 		}
 		try {
-			List<MyProfile> pageBeans = myProfileDaoImpl.getAllProfiles();
+			if(!admin_role) {
+				MyProfile profile = myProfileDaoImpl.findByName(user);
+				pageBeans.add(profile);
+			}else {
+				pageBeans = myProfileDaoImpl.getAllProfiles();
+			}
 			PaginationInterface pageRequest = new PaginationService(pageBeans, 5);
 			map.put("listPage", pageRequest.getRightPage(page));
 			map.put("maxPage", pageRequest.getMaxPage());

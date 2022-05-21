@@ -22,11 +22,15 @@ public class LatestNewService {
 	// 獲取警告
 	public List<String> checkWarningMessage(String account) {
 		List<String> resultLst = new ArrayList<String>();
+		
 		MyProfile profile = profileDaoImpl.findByName(account);
 		String passwordPass = profileService.isPasswordPass(profile.getPassword());
 		if(!"".equals(passwordPass)) {
 			resultLst.add(Constant.PWD_NOTALLOW_MSG);
 		}
+		// 假設我們沒有
+		resultLst.add(Constant.MAIL_NOTEXIST_MSG);
+		resultLst.add(Constant.PWD_EXPIRED_MSG);
 		return resultLst;
 	}
 	

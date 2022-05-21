@@ -9,12 +9,15 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.csprs.cbw.bean.user.MyProfile;
 import com.csprs.cbw.bean.user.MyRole;
 import com.csprs.cbw.dao.user.MyProfileDaoImpl;
 import com.csprs.cbw.util.Constant;
+import com.csprs.cbw.util.Utils;
 
 @Service
 public class MyProfileService {
@@ -28,6 +31,11 @@ public class MyProfileService {
 	
 	@Transactional
 	public String SaveAccountByAddUpdateString(String addupdate) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String account = authentication.getName();
+		boolean isAdmin = authentication.getAuthorities().stream().anyMatch(a -> Constant.ROLE_ADMIN.equals(a.getAuthority()));
+		System.out.println(account);
+		System.out.println(isAdmin);
 		String result_status = "";
 		// 要小心如果資料裡面有;的話就完蛋了
 		String[] addupdate_split = addupdate.split(";");
@@ -49,8 +57,8 @@ public class MyProfileService {
 			profile.setMail(mail);
 			profile.setLastModifiedTime(current);
 			profile.setPwdHistory(password);
-			// 創建
-			if("".equals(id)) {
+			// 創建(ADMIN才能)
+			if("".equals(id) && isAdmin) {
 				profile.setCreatedTime(current);
 				// 創建前必須要先查看 1.帳號是否存在
 				int checkAccountExist = myProfileDaoImpl.checkAccountExist(name);
@@ -60,13 +68,18 @@ public class MyProfileService {
 					myProfileDaoImpl.saveProfile(profile);
 					logger.info("創建帳號: " + profile.getName());
 				}
-			// 更新
+			// 更新(ADMIN才能更新所有，其他的必須看是否為自己)
 			}else {
+				if(!isAdmin && !account.equals(name)) {
+					return "權限無法對他人進行新增或更新";
+				}
 				profile.setId(Long.parseLong(id));
+				// 獲取以前的profile
+				MyProfile oldProfile = myProfileDaoImpl.findById(Long.parseLong(id));
 				// 更新前必須要先查看 1.密碼資安 2.前三密碼對照
-				String checkResult = checkUserCanUpdate(profile);
+				String checkResult = checkUserCanUpdate(profile, oldProfile);
 				if("ok".equals(checkResult)) {
-					myProfileDaoImpl.updateProfile(profile);
+					myProfileDaoImpl.updateProfile(profile, oldProfile, isAdmin);
 					logger.info("更新帳號: " + profile.getName());
 				}else {
 					result_status = checkResult;
@@ -80,18 +93,19 @@ public class MyProfileService {
 	}
 	
 	// 判斷是否可以更新 1.密碼資安 2.前三密碼對照
-	private String checkUserCanUpdate(MyProfile profile) {
+	private String checkUserCanUpdate(MyProfile profile, MyProfile oldProfile) {
 		String result = "ok";
-		MyProfile user = myProfileDaoImpl.findById(profile.getId());
-		if(user != null) {
+		if(oldProfile != null) {
 			// 1.判斷密碼資安
 			if(!"".equals(isPasswordPass(profile.getPassword()))) {
 				result = "密碼不符合資安認證 !!!";
 			}
 			// 2.判斷前三密碼
-			String[] histories = user.getPwdHistory().split(",");
-			if (Arrays.stream(histories).anyMatch(p -> p.equalsIgnoreCase(profile.getPassword()))) {
-				result = "與前三筆中的其中一筆密碼相同 !!!";
+			if(!Utils.isNullEmptyString(oldProfile.getPwdHistory())) {
+				String[] histories = oldProfile.getPwdHistory().split(",");
+				if (Arrays.stream(histories).anyMatch(p -> p.equalsIgnoreCase(profile.getPassword()))) {
+					result = "與前三筆中的其中一筆密碼相同 !!!";
+				}
 			}
 		}
 		return result;

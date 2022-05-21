@@ -29,8 +29,8 @@
         <div class="position-relative overflow-hidden p-3 p-md-2 m-md-3 text-center bg-light">
             <div class="btn-group" role="group" aria-label="Basic example">
                 <a href="/csprscbw/cbw_station" class="btn btn-outline-secondary btn-sm">站點</a>
-                <a sec:authorize="hasRole('ROLE_ADMIN')" href="/csprscbw/account"
-                    class="btn btn-outline-secondary btn-sm">帳號管理</a>
+                <!-- sec:authorize="hasRole('ROLE_ADMIN')"  -->
+                <a href="/csprscbw/account" class="btn btn-outline-secondary btn-sm">帳號管理</a>
                 <a href="/csprscbw/cwb/index" class="btn btn-outline-secondary btn-sm">首頁</a>
                 <a class="btn btn-danger btn-sm" data-bs-toggle="collapse" href="#collapseExample" role="button"
                     aria-expanded="false" aria-controls="collapseExample">
@@ -44,7 +44,10 @@
             	<!-- <img src="/csprscbw/image/warning.png" width="10" height="10" class="col-1 mx-auto" /> -->
 				<div class="card" style="width: 100%;">
 					<ul class="list-group list-group-flush" th:each="msg: ${session.WarningMsgs}">
-						<li class="list-group-item" ><img src="/csprscbw/image/warning.png" width="20" height="20" />&nbsp;<span th:text="${msg}"></span></li>
+						<li class="list-group-item" >
+							<img src="/csprscbw/image/warning.png" width="20" height="20" />
+							&nbsp;<span th:text="${msg}" style="color:#ff0023;"></span>
+						</li>
 					</ul>
 				</div>
             </div>

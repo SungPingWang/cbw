@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.csprs.cbw.bean.user.MyProfile;
 import com.csprs.cbw.repository.user.MyProfileRepository;
+import com.csprs.cbw.util.Utils;
 
 
 @Service
@@ -46,18 +47,27 @@ public class MyProfileDaoImpl {
 	
 	// 更新profile
 	@Transactional
-	public void updateProfile(MyProfile profile) {
+	public void updateProfile(MyProfile profile, MyProfile oldProfile, Boolean isAdmin) {
+		
 		try {
-			MyProfile user = myProfileRepository.findById(profile.getId()).get(0);
 			String pwd3History = "";
-			String[] histories = user.getPwdHistory().split(",");
-			if(histories.length != 3) {
-				pwd3History = String.join(",", histories) +","+ profile.getPwdHistory();
+			if(!Utils.isNullEmptyString(oldProfile.getPwdHistory())) {
+				String[] histories = oldProfile.getPwdHistory().split(",");
+				if(histories.length != 3) {
+					pwd3History = String.join(",", histories) +","+ profile.getPwdHistory();
+				}else {
+					pwd3History = histories[1] +","+ histories[2] + "," + profile.getPwdHistory();
+				}
 			}else {
-				pwd3History = histories[1] +","+ histories[2] + "," + profile.getPwdHistory();
+				pwd3History = profile.getPwdHistory();
 			}
+			
 			profile.setPwdHistory(pwd3History);
-			profile.setCreatedTime(user.getCreatedTime());
+			profile.setCreatedTime(oldProfile.getCreatedTime());
+			// isAdmin --> 是否為ADMIN更新任何人資料，如果不是就代表是USER個人在編輯自己的資料
+			if(!isAdmin) {
+				profile.setRoles(oldProfile.getRolesList());
+			}
 			myProfileRepository.save(profile);
 		} catch (NumberFormatException e) {
 			logger.error(e.toString());
