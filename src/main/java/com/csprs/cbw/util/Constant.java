@@ -54,7 +54,7 @@ public class Constant {
 	/* error提示語 */
 	public final static String LOGIN_FAILED_MSG = "登入驗證錯誤，請重新進行登入。";
 	/* cbw_station提示語 */
-	public final static String CBW_STATION_NOT_FOUND = "相關頁面不存在或出現錯誤 !!!";
+	public final static String PAGINATION_NOT_FOUND = "相關頁面不存在或出現錯誤 !!!";
 	/* 帳號增改警告語 */
 	public final static String ACCOUNT_EXISTED = "此帳號已存在 !!!";
 	public final static String ACCOUNT_NOAUTH_CRUD = "您的權限無法對他人進行增刪改查操作 !!!";
@@ -63,6 +63,6 @@ public class Constant {
 	/* 忘記密碼重設系列輸出提示語 */
 	public final static String RESETPWD_TOKEN_EXISTED = "忘記密碼動作逾時，請重新進行申請。";
 	public final static String RESETPWD_MAIL_SENT = "成功發送密碼驗證信息到信箱，請耐心等候。";
-	public final static String RESETPWD_MAIL_NOTEXISTED = "並未找到相關帳號，或是帳號並未設定通信信箱。";
+	public final static String RESETPWD_MAIL_NOTEXISTED = "錯誤，可能原因為未找到相關帳號、帳號並未設定通信信箱或是信箱輸入錯誤。";
 	public final static String RESETPWD_ERROR = "密碼新設錯誤，請重新仔細輸入。";
 }

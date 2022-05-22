@@ -26,6 +26,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.csprs.cbw.util.MailService;
+import com.csprs.cbw.util.Utils;
 import com.csprs.cbw.bean.user.MyProfile;
 import com.csprs.cbw.dao.user.MyProfileDaoImpl;
 import com.csprs.cbw.service.security.TimeLimitService;
@@ -65,14 +66,14 @@ public class LoginOutController {
 	
 	// 忘記密碼送出POST
 	@PostMapping("/forgotPwd")
-	public String forgotPwdPost(String acc, 
+	public String forgotPwdPost(String acc, String mail,
 			RedirectAttributes redirectAttributes) throws Exception {
 		// 1 設定token逾時時間
 		Long datetime = System.currentTimeMillis() + Long.parseLong(TOKEN_EXPIRED);
 		// 2 判斷帳號是不是在資料庫內的
 		// 3 這裡要多判斷對應的帳號是不是有mail
 		MyProfile profile = myProfileDaoImpl.findByName(acc);
-		if(profile != null && profile.getMail() != null && !"".equals(profile.getMail().trim())) {
+		if(profile != null && !Utils.isNullEmptyString(profile.getMail()) && profile.getMail().equals(mail)){
 			// 4 和輸入的帳號進行組合
 			String concatToken = acc + ":" + datetime;
 			// 5 加密token

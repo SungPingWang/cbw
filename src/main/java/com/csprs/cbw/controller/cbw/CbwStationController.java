@@ -33,7 +33,7 @@ public class CbwStationController {
 			@RequestParam(value = "page", defaultValue = "1") Integer page,
 			@RequestParam(value = "city", defaultValue = "") String city) {
 		if(page == 0) {
-			map.put("warning", Constant.CBW_STATION_NOT_FOUND);
+			map.put("warning", Constant.PAGINATION_NOT_FOUND);
 			page = 1;
 		}
 		try {

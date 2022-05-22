@@ -47,7 +47,7 @@ public class AccountController {
 		boolean admin_role = authentication.getAuthorities().stream().anyMatch(a -> Constant.ROLE_ADMIN.equals(a.getAuthority()));
 		
 		if(page == 0) {
-			map.put("warning", "'page' not found error !!!");
+			map.put("warning", Constant.PAGINATION_NOT_FOUND);
 			page = 1;
 		}
 		try {
