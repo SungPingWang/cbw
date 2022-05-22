@@ -47,7 +47,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
     	/* @validateTimeLimit() 實現
     	 * 判斷是不是因為登入錯誤太多次被鎖住的帳號
     	 * */
-    	if(!"/csprscbw/handleLogin/lock".equals(httpServletRequest.getRequestURI())) {
+    	if(!(Constant.LOCK_PATH).equals(httpServletRequest.getRequestURI())) {
     		try {
         		validateTimeLimit(new ServletWebRequest(httpServletRequest), httpServletResponse, sessionStrategy);
             } catch (ValidateCodeException e) {
@@ -60,7 +60,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
     	 * 如果是POST方法，並且在進行登入的時候(/security/login 路徑)
     	 * 則開始在validateCode方法中添加對圖形驗證碼的功能
     	 * */
-    	if (httpServletRequest.getRequestURI().startsWith("/csprscbw/login")
+    	if (httpServletRequest.getRequestURI().startsWith(Constant.LOGIN_PATH)
                 && "post".equalsIgnoreCase(httpServletRequest.getMethod())) {
     		log.info("先跑圖形驗證");
             try {

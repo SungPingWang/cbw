@@ -60,7 +60,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e1) {
-				log.error("[ERRO] >> 睡眠出現錯誤");
+				log.error("睡眠出現錯誤");
 			}
 			httpServletResponse.sendRedirect("/csprscbw/error/login_failed/failed");
 		}

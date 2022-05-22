@@ -80,10 +80,10 @@ public class LoginOutController {
 			// 6 傳送mail到指定的帳號信箱內
 			mailService.sendingForgotPwdMail(token, profile.getMail());
 			logger.info("發送" + acc + "重設密碼驗證信息： " + profile.getMail());
-			redirectAttributes.addFlashAttribute("errorMsg", "成功發送密碼驗證信息到信箱，請耐心等候。");
+			redirectAttributes.addFlashAttribute("errorMsg", Constant.RESETPWD_MAIL_SENT);
 			return "redirect:/login";
 		}else { // 如果找不到mail的話就只能回到忘記密碼的頁面了
-			redirectAttributes.addFlashAttribute("errorMsg", "並未找到相關帳號，或是帳號並未設定通信信箱。");
+			redirectAttributes.addFlashAttribute("errorMsg", Constant.RESETPWD_MAIL_NOTEXISTED);
 			return "redirect:/handleLogin/forgotPwd";
 		}
 	}
@@ -96,12 +96,12 @@ public class LoginOutController {
 		// 1 獲取token並且解密
 		String concatToken = EncryptDecrypt.decryptAES(token, KEY, TRANSFORMATION, ALGORITHM);
 		// 2 獲取token解密後的帳號以及逾時
-		String account = concatToken.split(":")[0];
-		long expired = Long.parseLong(concatToken.split(":")[1]);
+		String account = concatToken.split(Constant.COLON)[0];
+		long expired = Long.parseLong(concatToken.split(Constant.COLON)[1]);
 		// 3 判斷token是否逾時
 		if (expired < System.currentTimeMillis()) {
 			logger.warn("逾期嘗試進行密碼重設登入： " + account);
-			redirectAttributes.addFlashAttribute("errorMsg", "token逾時，請重新申請。");
+			redirectAttributes.addFlashAttribute("errorMsg", Constant.RESETPWD_TOKEN_EXISTED);
 			return "redirect:/login";
 		} else {
 			// 4 獲取account相關的密碼
@@ -137,7 +137,7 @@ public class LoginOutController {
 		String account = SecurityContextHolder.getContext().getAuthentication().getName();
 		if(!pwd1.equals(pwd2) || pwd1 == null || pwd2 == null) {
 			logger.warn("密碼重設失敗： " + account);
-			map.put("errorMsg", "密碼新設錯誤，請重新仔細輸入。");
+			map.put("errorMsg", Constant.RESETPWD_ERROR);
 			
 			session.setAttribute(Constant.SESSION_RESET_PWD_ERROR_COUNT_NAME, 1);
 			
@@ -145,7 +145,7 @@ public class LoginOutController {
 			return "system/resetPassword.html";
 		}else {
 			logger.info("密碼重設成功： " + account);
-			session.setAttribute("vertifyState", "0");
+			session.setAttribute(Constant.VERTIFY_SESSION, "0");
 			return "redirect:/cwb/index";
 		}
 		

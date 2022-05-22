@@ -16,6 +16,7 @@ import com.csprs.cbw.bean.cbw.cbwstation;
 import com.csprs.cbw.dao.cbw.CbwstationDaoImpl;
 import com.csprs.cbw.service.page.PaginationInterface;
 import com.csprs.cbw.service.page.PaginationService;
+import com.csprs.cbw.util.Constant;
 
 
 @Controller
@@ -32,7 +33,7 @@ public class CbwStationController {
 			@RequestParam(value = "page", defaultValue = "1") Integer page,
 			@RequestParam(value = "city", defaultValue = "") String city) {
 		if(page == 0) {
-			map.put("warning", "'page' not found error !!!");
+			map.put("warning", Constant.CBW_STATION_NOT_FOUND);
 			page = 1;
 		}
 		try {

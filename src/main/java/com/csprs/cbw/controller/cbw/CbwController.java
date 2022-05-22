@@ -120,7 +120,8 @@ public class CbwController {
         csvWriter.close();
  	}
  	
- 	@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
+ 	@Deprecated
+ 	//@RequestMapping(value = "/dashboard", method = RequestMethod.GET)
 	public String dashboardAction(RedirectAttributes redirectAttributes) {
  		
  		HttpClient httpClient =  new  HttpClient();

@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import com.csprs.cbw.service.manage.LatestNewService;
+import com.csprs.cbw.util.Constant;
 
 @Component
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
@@ -32,7 +33,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 		// 這裡可以針對一些警告進行session的設定，像是密碼不符合資安
 		List<String> checkWarningMessage = latestNewService.checkWarningMessage(name);
 		session.setAttribute("WarningMsgs", checkWarningMessage);
-		response.sendRedirect(request.getContextPath() + "/cwb/index");
+		//response.sendRedirect(request.getContextPath() + "/cwb/index");
+		response.sendRedirect(Constant.HOME_PATH);
 	}
 
 	

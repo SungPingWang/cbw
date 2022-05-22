@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.csprs.cbw.util.Constant;
+
 @Controller
 @RequestMapping("/error")
 public class ErrorHandlerController implements ErrorController {
@@ -48,7 +50,7 @@ public class ErrorHandlerController implements ErrorController {
 	@GetMapping("/login_failed/{cause}")
     public String login_error(@PathVariable(name = "cause") String error, Model model) {
 		
-		model.addAttribute("errorMsg", "登入驗證錯誤，請重新進行登入");
+		model.addAttribute("errorMsg", Constant.LOGIN_FAILED_MSG);
 		
         return "login";
     }

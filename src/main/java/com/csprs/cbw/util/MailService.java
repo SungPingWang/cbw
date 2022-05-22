@@ -9,6 +9,7 @@ import javax.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -23,6 +24,9 @@ public class MailService {
 	@Autowired
 	JavaMailSender mailSender;
 	
+	@Value("${mail.domainip}")
+	private String DOMAIN;
+	
 	// 無方法返回值調用
 	@Async("executor")
 	public void sendingForgotPwdMail(String token, String mail) {
@@ -36,7 +40,7 @@ public class MailService {
 		try {
 			StringBuffer bf = new StringBuffer();
 			bf.append("你已進行密碼重設動作，若無問題請於").append(three_days_after).append("內點擊");
-			bf.append("<a href='http://localhost:8080/csprscbw/handleLogin/vertify?token="+ token +"'>此連結按鈕</a>");
+			bf.append("<a href='http://" + DOMAIN + Constant.VERTIFY_PWD_PATH + "?token="+ token +"'>此連結按鈕</a>");
 			bf.append("進行密碼重設，逾期將無效。感謝您。");
  			// SimpleMailMessage message = new SimpleMailMessage();
 			MimeMessage message = mailSender.createMimeMessage();

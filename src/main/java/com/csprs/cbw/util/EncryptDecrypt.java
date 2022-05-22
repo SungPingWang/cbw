@@ -37,7 +37,7 @@ public class EncryptDecrypt {
 	public static String decryptAES(String encryptDES, String key, String transformation, String algorithm) throws Exception  {
 		// 因為token經過回傳有可能把+變成空格，所以要重新進行替換
 		encryptDES = encryptDES.replaceAll(" ", "+");
-		System.out.println("encryptDES: " + encryptDES);
+		//System.out.println("encryptDES: " + encryptDES);
 		Cipher cipher = Cipher.getInstance(transformation);
 		SecretKeySpec secretKeySpec = new SecretKeySpec(key.getBytes(), algorithm);
 		cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
