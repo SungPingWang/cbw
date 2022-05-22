@@ -259,6 +259,7 @@
         <div th:include="components/footer :: footer"></div>
     </div>
 
+	<script src="/csprscbw/js/utils/Utils.js"></script>
 	<script src="https://js.arcgis.com/4.23/"></script>
     <script src="/csprscbw/js/cbw_home/arcgis.js"></script>
 	<script type="module" src="https://js.arcgis.com/calcite-components/1.0.0-beta.79/calcite.esm.js"></script>
@@ -271,7 +272,10 @@
                 function () {
                     var pntSplit = orgCoordinateDisplayNode.innerHTML.split(",")
                     var html = "WGS84: " + orgCoordinateDisplayNode.innerHTML + "<br>";
-                    html += "twd97: " + pntSplit[0].trim() + "轉" + ", " + pntSplit[1].trim() + "轉";
+					var twd97Array = lonlat2twd97(
+						pntSplit[0].trim().substring(0, pntSplit[0].trim().length-2), 
+						pntSplit[1].trim().substring(0, pntSplit[1].trim().length-2));
+                    html += "twd97: " + twd97Array;
                     document.getElementById("attrId").innerHTML = html;
                 }, false);
             document.getElementsByClassName("esri-attribution__powered-by")[0].innerHTML = "&copy;中華民國航空測量及遙感探測學會 2021-2022";
