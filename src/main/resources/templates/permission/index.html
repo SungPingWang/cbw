@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>權限管理</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+	<div th:include="components/header :: header"></div>
+	
+    <main>
+        <div class="container py-1">
+            <header class="pb-3 mb-4 border-bottom">
+                <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-card-checklist" viewBox="0 0 16 16">
+					  <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h13zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+					  <path d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0zM7 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z"/>
+					</svg>
+                    <span class="fs-4">&nbsp;Permission Setting</span>
+                </a>
+            </header>
+
+            <div class="form-group d-flex justify-content-center">
+                <select class="form-control text-center" id="userSelect" style="width:20%;margin:2px;"
+                    onchange="changeUser(this);">
+                    <!-- add -->
+                </select>
+                <button type="submit" class="btn btn-outline-dark" style="margin:2px;">更改</button>
+            </div>
+            <hr>
+            <div class="row align-items-md-stretch">
+                <div class="col-md-6">
+                    <div class="h-100 p-5 bg-light border rounded-3">
+                        <h3>系統權限</h3>
+                        <div class="form-check">
+                            <input class="form-check-input selectAllClass" type="checkbox" value="1"
+                                id="ctl1SelectAllId">
+                            <label class="form-check-label" for="ctl1SelectAllId">
+                                全選
+                            </label>
+                        </div>
+                        <hr>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input ctl1CheckboxClass" type="checkbox" value="1.1"
+                                id="ctl1Check1Id">
+                            <label class="form-check-label" for="ctl1Check1Id">動作：查看帳號</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input ctl1CheckboxClass" type="checkbox" value="1.2"
+                                id="ctl1Check2Id" checked>
+                            <label class="form-check-label" for="ctl1Check2Id">動作：忘記密碼重設</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input ctl1CheckboxClass" type="checkbox" value="1.3"
+                                id="ctl1Check3Id">
+                            <label class="form-check-label" for="ctl1Check3Id">動作：准許登入</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input ctl1CheckboxClass" type="checkbox" value="1.4"
+                                id="ctl1Check4Id" checked>
+                            <label class="form-check-label" for="ctl1Check4Id">動作：查看注意事項</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="h-100 p-5 bg-light border rounded-3">
+                        <h3>首頁權限</h3>
+                        <div class="form-check">
+                            <input class="form-check-input selectAllClass" type="checkbox" value="2"
+                                id="ctl2SelectAllId">
+                            <label class="form-check-label" for="ctl2SelectAllId">
+                                全選
+                            </label>
+                        </div>
+                        <hr>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input ctl2CheckboxClass" type="checkbox" value="2.1"
+                                id="ctl2Check1Id">
+                            <label class="form-check-label" for="ctl2Check1Id">動作：點選地圖功能</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input ctl2CheckboxClass" type="checkbox" value="2.2"
+                                id="ctl2Check2Id" checked>
+                            <label class="form-check-label" for="ctl2Check2Id">動作：查看單一縣市天氣</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input ctl2CheckboxClass" type="checkbox" value="2.3"
+                                id="ctl2Check3Id">
+                            <label class="form-check-label" for="ctl2Check3Id">動作：查看重點測站天氣</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input ctl2CheckboxClass" type="checkbox" value="2.4"
+                                id="ctl2Check4Id" checked>
+                            <label class="form-check-label" for="ctl2Check4Id">動作：查看儀錶板</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row align-items-md-stretch">
+                <div class="col-md-6">
+                    <div class="h-100 p-5 bg-light border rounded-3">
+                        <h3>帳號管理權限</h3>
+                        <div class="form-check">
+                            <input class="form-check-input selectAllClass" type="checkbox" value="3"
+                                id="ctl3SelectAllId">
+                            <label class="form-check-label" for="ctl3SelectAllId">
+                                全選
+                            </label>
+                        </div>
+                        <hr>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input ctl3CheckboxClass" type="checkbox" value="3.1"
+                                id="ctl3Check1Id">
+                            <label class="form-check-label" for="ctl3Check1Id">動作：編輯自身帳號資料</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input ctl3CheckboxClass" type="checkbox" value="3.2"
+                                id="ctl3Check2Id" checked>
+                            <label class="form-check-label" for="ctl3Check2Id">動作：編輯自身權限</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input ctl3CheckboxClass" type="checkbox" value="3.3"
+                                id="ctl3Check3Id">
+                            <label class="form-check-label" for="ctl3Check3Id">controller3 : action3</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input ctl3CheckboxClass" type="checkbox" value="3.4"
+                                id="ctl3Check4Id" checked>
+                            <label class="form-check-label" for="ctl3Check4Id">controller3 : action4</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="h-100 p-5 bg-light border rounded-3">
+                        <h3>站點權限</h3>
+                        <div class="form-check">
+                            <input class="form-check-input selectAllClass" type="checkbox" value="4"
+                                id="ctl4SelectAllId">
+                            <label class="form-check-label" for="ctl4SelectAllId">
+                                全選
+                            </label>
+                        </div>
+                        <hr>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input ctl4CheckboxClass" type="checkbox" value="4.1"
+                                id="ctl4Check1Id">
+                            <label class="form-check-label" for="ctl4Check1Id">動作：查看站點</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input ctl4CheckboxClass" type="checkbox" value="4.2"
+                                id="ctl4Check2Id" checked>
+                            <label class="form-check-label" for="ctl4Check2Id">動作：查詢站點</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input ctl4CheckboxClass" type="checkbox" value="4.3"
+                                id="ctl4Check3Id">
+                            <label class="form-check-label" for="ctl4Check3Id">controller4 : action3</label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input ctl4CheckboxClass" type="checkbox" value="4.4"
+                                id="ctl4Check4Id" checked>
+                            <label class="form-check-label" for="ctl4Check4Id">controller4 : action4</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="pt-3 mt-4 text-muted border-top">
+                &copy; 2022
+            </footer>
+        </div>
+    </main>
+
+	<div class="container">
+        <div th:include="components/footer :: footer"></div>
+    </div>
+</body>
+<script th:inline="javascript">
+/*<![CDATA[*/
+	var usersObj = JSON.parse(/*[[${permissionJson}]]*/);
+	var usersObj2 = JSON.parse(/*[[${permissionJson2}]]*/);
+/*]]>*/
+</script>
+<script>
+    $(function () {
+        var usersObjKeys = Object.keys(usersObj2);
+        var html = "<option>Choose User</option>";
+        for (var i = 0; i < usersObjKeys.length; i++) {
+            var firstNode = usersObjKeys[i]; // eg, normal
+            html += "<optgroup id='" + firstNode + "' label='" + firstNode + "' style='text-align:left;'>";
+            var options = usersObj2[usersObjKeys[i]];
+            for (var opt = 0; opt < options.length; opt++) {
+                var secondNode = options[opt]; // eg, {"id5-1": ["Servlet", "1-1", "1-2"]}
+                var optKey = Object.keys(secondNode)[0]; // eg, id5-1
+                var optValue = options[opt][optKey]; // eg, ["Servlet", "1-1", "1-2"]
+                html += "<option id='" + optKey + "' value='" + optKey + "'>" + optValue[0] + "</option>";
+            }
+            html += "</optgroup>";
+        }
+        $("#userSelect").html(html);
+    });
+</script>
+<script>
+    var changeUser = function (element) {
+        var select = $("#" + element.id).find(":selected").attr("id"); // eg, id3-3
+        if (select == null || select.trim() == "") {
+            $('input[type=checkbox]').each(function () {
+                $(this).prop('checked', false);
+            });
+            return false;
+        }
+        var group = document.getElementById(select).parentElement.id; // eg, cities
+        var results = usersObj2[group];
+        for (var i = 0; i < results.length; i++) {
+            var eles = results[i][select];
+            if (eles != null) {
+                $('input[type=checkbox]').each(function () {
+                    if (!eles.includes($(this).val())) {
+                        $(this).prop('checked', false);
+                    } else {
+                        $(this).prop('checked', true);
+                    }
+                });
+            }else{
+				$(this).prop('checked', false);
+			}
+        }
+    }
+</script>
+<script>
+    $(".selectAllClass").each(function (index) {
+        var code = $(this).val();
+        $(this).change(function () {
+            var state = $(this).is(":checked");
+            var tmpCheckbocClass = ".ctl" + code + "CheckboxClass";
+            if (state) {
+                $(tmpCheckbocClass).each(function (index) {
+                    $(this).prop('checked', true);
+                })
+            } else {
+                $(tmpCheckbocClass).each(function (index) {
+                    $(this).prop('checked', false);
+                })
+            }
+        });
+    });
+</script>
+
+
+</html>

@@ -70,7 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/handleLogin/vertify").permitAll()
 			.antMatchers("/handleLogin/lock").permitAll()
 			.antMatchers("/cwb/**").hasAnyRole("USER", "MANAGER", "ADMIN")
-			//.antMatchers("/account/**").hasAnyRole("ADMIN")
+			.antMatchers("/permission/**").hasAnyRole("ADMIN")
 			.anyRequest().authenticated()
 			.and()
 			.formLogin()

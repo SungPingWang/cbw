@@ -1,13 +1,10 @@
 package com.csprs.cbw;
-
-import java.io.UnsupportedEncodingException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpClient;
@@ -15,7 +12,6 @@ import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.csprs.cbw.bean.cbw.cbwbean;
 import com.csprs.cbw.bean.cbw.cbwstation;
-import com.csprs.cbw.bean.user.MyProfile;
+import com.csprs.cbw.bean.user.Permission;
+import com.csprs.cbw.dao.user.PermissionDaoImpl;
 import com.csprs.cbw.repository.user.MyProfileRepository;
 import com.csprs.cbw.service.cbw.CbwService;
 
@@ -39,6 +36,56 @@ class CsprsCbwApplicationTests {
 	
 	@Autowired
 	private MyProfileRepository myProfileRepository;
+	@Autowired
+	private PermissionDaoImpl permissionDaoImpl;
+	
+	@Test
+	void testPermission() {
+		
+		List<String> adminList = new ArrayList<String>();
+		List<String> managerList = new ArrayList<String>();
+		List<String> userList = new ArrayList<String>();
+		List<Permission> permissions = permissionDaoImpl.getAllPermission();
+		StringBuffer buf = new StringBuffer();
+		// 獲取不重複的name名字
+		Set<String> set = new HashSet<>();
+		for(int i=0; i<permissions.size(); i++) {
+			set.add(permissions.get(i).getName());
+		}
+		Object[] array = set.toArray();
+		
+		for(int i=0; i<array.length; i++) {
+			String object = (String)array[i];
+			List<Permission> collects = permissions.stream()
+					.filter(p -> p.getName().equals(object))
+					.map(p -> new Permission(p.getId(), p.getGroup(), p.getName(), "\""+p.getPermissionCode()+"\""))
+					.collect(Collectors.toList());
+			String join = "";
+			Set<String> set2 = new HashSet<>();
+			collects.forEach(p -> set2.add(p.getPermissionCode()));
+			System.out.println(set2.size());
+			collects.forEach(p -> System.out.println(p.getPermissionCode()));
+			for(int j=0; j<collects.size(); j++) {
+				set2.add(collects.get(j).getPermissionCode());
+			}
+			join = String.join(",", set2.toArray(new String[set2.size()]));
+			String str = "{\""+collects.get(0).getName()+"\":[\""+collects.get(0).getName()+"\","+join+"]}\r\n";
+
+			if("admin".equals(collects.get(0).getGroup())) {
+				adminList.add(str);
+			}else if("manager".equals(collects.get(0).getGroup())) {
+				managerList.add(str);
+			}else {
+				userList.add(str);
+			}
+		}
+		buf.append("{\r\n");
+		buf.append("\"admin\": [\r\n").append(String.join(",", adminList.toArray(new String[adminList.size()]))).append("],\r\n");
+		buf.append("\"manager\": [\r\n").append(String.join(",", managerList.toArray(new String[managerList.size()]))).append("],\r\n");
+		buf.append("\"user\": [\r\n").append(String.join(",", userList.toArray(new String[userList.size()]))).append("]\r\n");
+		buf.append("}");
+		System.out.println(buf.toString());
+	}
 	
 	@Test
 	void testSplit() {
