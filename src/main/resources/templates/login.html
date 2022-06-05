@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>login</title>
+<title>系統登入</title>
 <link rel="stylesheet" type="text/css"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 <link type="text/css" rel="stylesheet"  th:href="@{/css/system/index.css}">
@@ -13,7 +13,17 @@
 	src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </head>
 <body class="center">
+	
 	<main class="form-signin">
+		<div class="alert alert-success" role="alert">
+		  <h4 class="alert-heading">Well done!</h4>
+		  <p>
+		  	本系統仍然屬於測試與嘗試階段<br>
+			若有疑問可通知本系統專人，<br>或與本學會進行詢問。
+		  </p>
+		  <hr>
+		  <p class="mb-0">+886-916406021</p>
+		</div>
 		<form th:action="@{/login}" method="post">
 			<div class="text-center" th:if="${param.error}">帳號密碼錯誤</div>
 			<div class="text-center" th:if="${param.logout}">登出成功</div>

@@ -65,6 +65,22 @@
         var showingStation = /*[[${showingStation}]]*/ 'default';
 	/*]]>*/
     </script>
+	<script>
+		// read taiwan county geojson
+		var taiwanCountyFilePath = "/csprscbw/taiwanCounty.geojson";
+		var taiwanCountyGeoJson = "";
+		var rawFile = new XMLHttpRequest();
+		rawFile.open("GET", taiwanCountyFilePath, false);
+		rawFile.onreadystatechange = function () {
+			if(rawFile.readyState === 4){
+		    	if(rawFile.status === 200 || rawFile.status == 0){
+		        	var allText = rawFile.responseText;
+		        	taiwanCountyGeoJson = allText;
+		   		}
+			}
+		}
+		rawFile.send(null);
+	</script>
 
 </head>
 
@@ -122,11 +138,15 @@
             <div class="my-3 p-3">
                 <h3 class="display-6"><strong>主要測站點位資料</strong><img width='60' height='60'
                         src='/csprscbw/image/station.png' /></h3>
+				<p class="lead"><strong>建議使用個人電腦已維持良好的查詢體驗</strong></p>
                 <div id="viewDiv"></div>
 				<div id="attrId" class="attrClass"><div>暫無位置</div></div>
 				<calcite-action-bar id="panelItem">
 		          <calcite-action-group>
 		            <calcite-action id="bmapId" text="Basemaps" icon="layer-basemap"></calcite-action>
+					<calcite-action id="orgExtentId" text="Zoom Back">
+						<span class="esri-icon-home" aria-label="close icon"></span>
+					</calcite-action>
 		          </calcite-action-group>
 		        </calcite-action-bar>
             </div>
@@ -264,6 +284,8 @@
     <script src="/csprscbw/js/cbw_home/arcgis.js"></script>
 	<script type="module" src="https://js.arcgis.com/calcite-components/1.0.0-beta.79/calcite.esm.js"></script>
   	<script nomodule="" src="https://js.arcgis.com/calcite-components/1.0.0-beta.79/calcite.js"></script>
+	
+	<script type="text/javascript" src="http://malsup.github.io/jquery.blockUI.js"></script>
     <script>
         window.onload = function () {
 			/**/
@@ -287,6 +309,11 @@
             var minusIcon = document.getElementsByClassName("esri-icon-minus")[0];
             minusIcon.classList.add("esri-icon-zoom-out-magnifying-glass");
             minusIcon.classList.remove("esri-icon-minus");
+
+
+			setTimeout(function () {
+            	$.unblockUI(); 
+         	}, 1000); 
         }
     </script>
 

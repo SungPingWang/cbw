@@ -14,10 +14,14 @@ require([
     "esri/widgets/CoordinateConversion/support/Conversion",
     "esri/core/watchUtils",
     "esri/widgets/CoordinateConversion/support/Format",
-    "esri/geometry/Point"
+    "esri/geometry/Point",
+	"esri/layers/GeoJSONLayer",
+	"esri/renderers/Renderer",
+	"esri/core/reactiveUtils",
+	"esri/rest/support/Query"
 ], function (
     esriConfig,
-    Map,
+    Map, 
     MapView,
     FeatureLayer,
     Graphic, GraphicsLayer,
@@ -25,7 +29,13 @@ require([
     Popup, PopupTemplate,
     Extent, UI,
     CoordinateConversion, Conversion,
-    watchUtils, Format, Point) {
+    watchUtils, Format, Point, GeoJSONLayer,
+	Renderer, reactive, Query) {
+		
+	$.blockUI({
+    	message: '<img src="/csprscbw/image/loading.gif" width="100px" height="100px" />',
+		css: { border: 'none', color: '#fff', backgroundColor: 'rgba(0, 0, 0, 0)'   }
+	});
 
     var basemapStartPosition = 0;
     var basemapList = ["satellite", "topo-vector", "hybrid", "osm"];
@@ -124,12 +134,12 @@ require([
             "<tr><td scope='row'>緯度</td><td scope='col'>" + instance_Y + "</td></tr>" +
             "</tbody></table>";
         var template = new PopupTemplate();
-        //template.title = "title";
+        template.title = "測站點位";
         template.content = station_html;
         // close popup 
         // https://community.esri.com/t5/arcgis-api-for-javascript/what-is-the-function-to-close-a-popup-window/td-p/11379
         pointGraphic.popupTemplate = template;
-        map.add(graphicsLayer, 0);
+        map.add(graphicsLayer, 1);
     }
 
     document.getElementById("bmapId").addEventListener('click', function (event) {
@@ -142,4 +152,79 @@ require([
         map.basemap = basemapList[basemapStartPosition];
     });
 
+	// **************************************************
+	// 添加taiwanCounty geojson renderer
+	let taiwanCountyRenderer = {
+	  	type: "simple", 
+	  	symbol: { 
+			type: "simple-fill",
+			color: "rgba(60, 179, 113, 0.2)",
+            outline: {
+              color: "white"
+            }
+		},  
+	};
+	var taiwanCountyHtml = "<table class='data'><tr><td scope='row'>縣市代碼</td><td scope='col'>{COUNTY_ID}</td></tr>";
+	taiwanCountyHtml += "<tr><td scope='row'>縣市名稱</td><td scope='col'>{COUNTY}</td></tr>";
+	taiwanCountyHtml += "</table>";
+	var taiwanCountyTemplate = {
+		title: "縣市",
+		content: taiwanCountyHtml,
+		outFields: ["*"]
+	}
+	// 添加taiwanCounty geojson圖層
+	var taiwanCountyBlob = new Blob([taiwanCountyGeoJson], {
+    	type: "application/json"
+  	});
+  	var taiwanCountyBlobUrl = URL.createObjectURL(taiwanCountyBlob);
+  	var taiwanCountyLayer = new GeoJSONLayer({ 
+		id: "taiwanCountyLayer",
+		url: taiwanCountyBlobUrl,
+		renderer: taiwanCountyRenderer,
+		popupEnabled: true,
+		visible: true,
+		outfields: ["*"]
+	});
+	taiwanCountyLayer.popupTemplate = taiwanCountyTemplate;
+	map.add(taiwanCountyLayer, 0);
+	// **************************************************
+	view.on("click", function(event){
+		let query = taiwanCountyLayer.createQuery();
+		query.geometry = view.toMap(event);  // the point location of the pointer
+		query.distance = 2;
+		query.units = "miles";
+		query.spatialRelationship = "intersects";  // this is the default
+		query.returnGeometry = true;
+		query.outFields = [ "*" ];
+		
+		var options = {
+			duration: 1000
+		};
+		taiwanCountyLayer.queryFeatures(query)
+			.then(function(response){
+				if(response.features[0]){
+					view.goTo({
+						geometry: response.features[0].geometry,
+					    zoom: 9
+					}, options);
+				}
+			});
+	});
+	
+	document.getElementById("orgExtentId").addEventListener('click', function (event) {
+		var options = {
+			duration: 1000
+		};
+        view.goTo({
+	        geometry: {
+	            type: "extent",
+	            xmin: 119.0, ymin: 21.0,
+	            xmax: 122.5, ymax: 26.5
+	        },
+			center: [119.641720, 23.947938],
+			zoom: 7,
+	        minZoom: 7
+	    }, options);
+		view.popup.close();
+    });
 });

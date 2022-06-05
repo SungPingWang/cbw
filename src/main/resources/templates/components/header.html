@@ -1,5 +1,5 @@
 <header th:fragment="header">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="background-color:#707c89!important">
         <div class="container-fluid">
             <a class="navbar navbar-brand" href="/csprscbw/cwb/index" style="font-size: 20px !important;">
                 <img src="/csprscbw/image/gis.png" width="30" height="30"></img>&nbsp;CSPRS CBW
@@ -26,16 +26,21 @@
 
 
     <div class="container">
-        <div class="position-relative overflow-hidden p-3 p-md-2 m-md-3 text-center bg-light">
+        <div class="position-relative overflow-hidden p-3 p-md-3 m-md-3 text-center bg-light">
             <div class="btn-group" role="group" aria-label="Basic example">
                 <a href="/csprscbw/cbw_station" class="btn btn-outline-secondary btn-sm">站點</a>
                 <!-- sec:authorize="hasRole('ROLE_ADMIN')"  -->
                 <a href="/csprscbw/account" class="btn btn-outline-secondary btn-sm">帳號管理</a>
                 <a sec:authorize="hasRole('ROLE_ADMIN')" href="/csprscbw/permission" class="btn btn-outline-secondary btn-sm">權限管理</a>
                 <a href="/csprscbw/cwb/index" class="btn btn-outline-secondary btn-sm">首頁</a>
-                <a class="btn btn-danger btn-sm" data-bs-toggle="collapse" href="#collapseExample" role="button"
+                <a class="btn btn-outline-danger btn-sm" data-bs-toggle="collapse" href="#collapseExample" role="button"
                     aria-expanded="false" aria-controls="collapseExample">
                     注意
+					<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" 
+						th:text="${#lists.size(session.WarningMsgs)}">
+    					99+
+    					<span class="visually-hidden">unread messages</span>
+  					</span>
                 </a>
             </div>
         </div>
