@@ -4,18 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <title>CBW氣象局即時測站資料</title>
-    
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" >
-    <link rel="stylesheet" href="https://js.arcgis.com/4.23/esri/themes/light/main.css">
-    <link rel="stylesheet" href="/csprscbw/css/cbw_home/cbw.css">
-    <link rel="icon" href="/csprscbw/favicon.ico">
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" ></script>
-    <script src="/csprscbw/assets/dist/js/jquery.min.js"></script>
-    <script src="/csprscbw/js/cbw_home/index.js"></script>
-    <script src="/csprscbw/js/cbw_home/cbw.js"></script>
-
+    <th:block th:replace="components/layout::common_head_css" />
+	<th:block th:replace="components/layout::arcgis_head_css" />
+	<link rel="stylesheet" href="/csprscbw/css/cbw_home/cbw.css">
+	
+	<th:block th:replace="components/layout::common_head_js" />
+	
+	<script src="/csprscbw/js/cbw_home/index.js"></script>
+	<script src="/csprscbw/js/cbw_home/cbw.js"></script>
 	<!--
 	<link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.0.0-beta.79/calcite.css" />
     <script src="https://cdn.rawgit.com/calvinmetcalf/shapefile-js/gh-pages/dist/shp.js"></script>
@@ -24,6 +21,10 @@
     <script th:inline="javascript">
         /*<![CDATA[*/
         $(document).ready(function () {
+			$.blockUI({
+		    	message: '<img src="/csprscbw/image/loading.gif" width="100px" height="100px" />',
+				css: { border: 'none', color: '#fff', backgroundColor: 'rgba(0, 0, 0, 0)'   }
+			});
             var weatherJson = {
                 "晴": "/csprscbw/image/weather/summer.png",
                 "多雲": "/csprscbw/image/weather/partly-cloudy-day.png",
@@ -102,9 +103,10 @@
             <div class="left-column">
                 <div class="container">
                     <div class="container">
-                        <h1><strong>氣象局即時資料</strong></h1> &nbsp
-                        <img src="/csprscbw/image/weather/partly-cloudy-day.png" alt="Simply Easy Learning" width="60"
-                            height="60">
+                        <h1>
+							<img src="/csprscbw/image/weather/partly-cloudy-day.png" alt="Simply Easy Learning" width="60" height="60">
+							<strong>氣象局即時資料</strong>
+						</h1> &nbsp
 	                    <p class="lead">
 	                        <strong>本系統蒐集中央氣象局即時最新天氣預報，系統約每小時更新一次。</strong><br />
 	                        <strong>各測站更新週期不一，可按下方按鈕進行充新整理。<br />
@@ -279,41 +281,16 @@
         <div th:include="components/footer :: footer"></div>
     </div>
 
-	<script src="/csprscbw/js/utils/Utils.js"></script>
-	<script src="https://js.arcgis.com/4.23/"></script>
+	<th:block th:replace="components/layout::arcgis_foot_js" />
     <script src="/csprscbw/js/cbw_home/arcgis.js"></script>
-	<script type="module" src="https://js.arcgis.com/calcite-components/1.0.0-beta.79/calcite.esm.js"></script>
-  	<script nomodule="" src="https://js.arcgis.com/calcite-components/1.0.0-beta.79/calcite.js"></script>
-	
 	<script type="text/javascript" src="http://malsup.github.io/jquery.blockUI.js"></script>
-    <script>
+	
+	<script>
         window.onload = function () {
-			/**/
-            var orgCoordinateDisplayNode = document.getElementsByClassName('esri-coordinate-conversion__display')[0];
-            orgCoordinateDisplayNode.addEventListener('DOMNodeInserted',
-                function () {
-                    var pntSplit = orgCoordinateDisplayNode.innerHTML.split(",")
-                    var html = "WGS84: " + orgCoordinateDisplayNode.innerHTML + "<br>";
-					var twd97Array = lonlat2twd97(
-						pntSplit[0].trim().substring(0, pntSplit[0].trim().length-2), 
-						pntSplit[1].trim().substring(0, pntSplit[1].trim().length-2));
-                    html += "twd97: " + twd97Array;
-                    document.getElementById("attrId").innerHTML = html;
-                }, false);
-            document.getElementsByClassName("esri-attribution__powered-by")[0].innerHTML = "&copy;中華民國航空測量及遙感探測學會 2021-2022";
-
-            // 修改zoom in out圖片
-            var plusIcon = document.getElementsByClassName("esri-icon-plus")[0];
-            plusIcon.classList.add("esri-icon-zoom-in-magnifying-glass");
-            plusIcon.classList.remove("esri-icon-plus");
-            var minusIcon = document.getElementsByClassName("esri-icon-minus")[0];
-            minusIcon.classList.add("esri-icon-zoom-out-magnifying-glass");
-            minusIcon.classList.remove("esri-icon-minus");
-
-
-			setTimeout(function () {
-            	$.unblockUI(); 
-         	}, 1000); 
+			arcgisInit();
+			setTimeout(function() {
+				$.unblockUI();
+			}, 1000);
         }
     </script>
 

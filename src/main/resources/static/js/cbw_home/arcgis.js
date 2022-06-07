@@ -31,11 +31,6 @@ require([
     CoordinateConversion, Conversion,
     watchUtils, Format, Point, GeoJSONLayer,
 	Renderer, reactive, Query) {
-		
-	$.blockUI({
-    	message: '<img src="/csprscbw/image/loading.gif" width="100px" height="100px" />',
-		css: { border: 'none', color: '#fff', backgroundColor: 'rgba(0, 0, 0, 0)'   }
-	});
 
     var basemapStartPosition = 0;
     var basemapList = ["satellite", "topo-vector", "hybrid", "osm"];

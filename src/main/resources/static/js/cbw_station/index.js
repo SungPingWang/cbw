@@ -1,3 +1,4 @@
+var test = "2werfwe";
 var alterBean = function (msg) {
     var th_tag = msg.parentElement.parentElement.getElementsByTagName("th");
     var td_tag = msg.parentElement.parentElement.getElementsByTagName("td");
@@ -79,4 +80,12 @@ var alterAccount = function () {
 var getStationData = function () {
     var selected = $('#select1').find(":selected").text();
     location.href = "/csprscbw/cbw_station?city=" + selected;
+}
+
+var displayOnMap = function(station, city) {
+	var title = "測站位置：" + city + station;
+	console.log(title);
+	$( "#viewDiv" ).dialog( "option", "title", title );
+	$( "#viewDiv" ).dialog( "open" );
+	
 }
