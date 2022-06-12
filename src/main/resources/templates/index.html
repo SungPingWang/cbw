@@ -5,14 +5,11 @@
     <meta charset="UTF-8">
     <title>CBW氣象局即時測站資料</title>
 
-    <th:block th:replace="components/layout::common_head_css" />
-	<th:block th:replace="components/layout::arcgis_head_css" />
-	<link rel="stylesheet" href="/csprscbw/css/cbw_home/cbw.css">
-	
-	<th:block th:replace="components/layout::common_head_js" />
-	
-	<script src="/csprscbw/js/cbw_home/index.js"></script>
-	<script src="/csprscbw/js/cbw_home/cbw.js"></script>
+    <th:block th:replace="components/layout::bootstrap_head_css" />
+	<th:block th:replace="components/layout::arcgisapi_head_css" />
+	<th:block th:replace="components/layout::global_utils_js" />
+	<th:block th:replace="components/layout::gis_utils_js" />
+	<th:block th:replace="components/layout::cbw_index_head_static" />
 	<!--
 	<link rel="stylesheet" type="text/css" href="https://js.arcgis.com/calcite-components/1.0.0-beta.79/calcite.css" />
     <script src="https://cdn.rawgit.com/calvinmetcalf/shapefile-js/gh-pages/dist/shp.js"></script>
@@ -274,16 +271,12 @@
         <span style="display:block;"></span>
     </a>
 
-
-
-
     <div class="container">
         <div th:include="components/footer :: footer"></div>
     </div>
 
-	<th:block th:replace="components/layout::arcgis_foot_js" />
-    <script src="/csprscbw/js/cbw_home/arcgis.js"></script>
-	<script type="text/javascript" src="http://malsup.github.io/jquery.blockUI.js"></script>
+	<th:block th:replace="components/layout::arcgisapi_foot_js" />
+    <th:block th:replace="components/layout::cbw_index_foot_static" />
 	
 	<script>
         window.onload = function () {

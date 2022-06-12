@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>GIS圖資平台</title>
+
+	<th:block th:replace="components/layout::bootstrap_head_css" />
+	<th:block th:replace="components/layout::arcgisapi_head_css" />
+	<th:block th:replace="components/layout::gis_platform_head_static" />
+
+</head>
+
+<body>
+	<main>
+		<div th:include="components/sideheader :: sideheader" class="flex-shrink-0 p-3 bg-white" style="width:15%;"></div>
+		<div class="b-example-divider"></div>
+		<div class="flex-shrink-0 p-3 bg-white" style="width: 83%;">
+			<div class="container">
+				<div class="position-relative p-3 p-md-3 m-md-1 text-center bg-light">
+					<div class="input-group" style="justify-content:center;">
+						<span class="input-group-text" id="basic-addon3">選擇功能：</span>
+						<div class="form-group d-flex justify-content-center">
+							<select class="form-control" id="dropdownMenu1" style="width:200px;">
+								<option id="noWMap" value="noWMap">選擇圖資服務</option>
+								<!--
+                <optgroup label="一般">
+                  <option id="WMap4" value="WMap4">正射影像圖(通用版)</option>
+                  <option id="WMap5" value="WMap5">電子地圖(通用版)</option>
+                  <option id="WMap6" value="WMap6">混合地圖(通用版)</option>
+                  <option id="WMap7" value="WMap7">段籍圖(通用版)</option>
+                  <option id="WMap8" value="WMap8">1/5000圖幅框(通用版)</option>
+                  <option id="WMap9" value="WMap9">OpenStreetMap</option>
+                </optgroup>
+                <optgroup label="Google地圖">
+                  <option id="WMap10" value="WMap10">地圖</option>
+                  <option id="WMap11" value="WMap11">衛星影像</option>
+                  <option id="WMap12" value="WMap12">混合</option>
+                </optgroup>
+                -->
+							</select>
+						</div>
+						<button id="location" class="btn btn-outline-secondary btn-sm" type="button">定位</button>
+						<button id="refresh" class="btn btn-outline-secondary btn-sm" type="button"
+							onclick="location.reload();">刷新</button>
+						<div class="btn-group dropdown">
+							<button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle"
+								data-bs-toggle="dropdown" aria-expanded="false">
+								測量
+							</button>
+							<ul class="dropdown-menu">
+								<li>
+									<h6 class="dropdown-item esri-interactive esri-icon-measure-line" id="distance">
+										&nbsp;量測長度</h6>
+								</li>
+								<li>
+									<h6 class="dropdown-item esri-interactive esri-icon-measure-area" id="area">
+										&nbsp;量測面積</h6>
+								</li>
+								<li>
+									<h6 class="dropdown-item esri-interactive esri-icon-trash" id="clear">&nbsp;清除測量
+									</h6>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='currentColor'/%3E%3C/svg%3E&#34;);"
+				aria-label="breadcrumb">
+
+				<div class="container row">
+					<div class="col-9">
+						<ol class="breadcrumb" style="margin: 0px;">
+							<li class="breadcrumb-item active basemapStage" aria-current="page"
+								style="font-weight:bold;color:blue">satellite</li>
+							<li class="breadcrumb-item active basemapStage" aria-current="page">topo-vector</li>
+							<li class="breadcrumb-item active basemapStage" aria-current="page">hybrid</li>
+							<li class="breadcrumb-item active basemapStage" aria-current="page">osm</li>
+							<li class="breadcrumb-item active basemapStage" aria-current="page">dark-gray-vector</li>
+						</ol>
+					</div>
+					<div class="col-3"><strong>上個步驟：</strong><span id="lastStep">頁面刷新</span></div>
+				</div>
+			</nav>
+			<div id="viewDiv"></div>
+			<div>
+				<!--id="panelItem"-->
+				<div id="panelItem">
+					<calcite-action-bar id="panelItemContent" style="margin-bottom: 10px;">
+						<calcite-action-group>
+							<calcite-action id="layers" text="圖層" icon="layers"></calcite-action>
+							<calcite-action id="bmapId" text="底圖" icon="layer-basemap"></calcite-action>
+						</calcite-action-group>
+					</calcite-action-bar>
+
+
+					<calcite-combobox id="layerChosenComboboxItem" scale="s">
+						<!--
+            <calcite-combobox-item value="roadKillLyr" text-label="路殺圖資"></calcite-combobox-item>
+            <calcite-combobox-item value="cbwLyr" text-label="氣象局測站圖資"></calcite-combobox-item>
+            <calcite-combobox-item value="roadSectionLyr" text-label="地段資料圖資"></calcite-combobox-item>
+            <calcite-combobox-item value="layer4" text-label="土地使用圖資" disabled></calcite-combobox-item>
+            <calcite-combobox-item value="layer7" text-label="漁業署相關" disabled>
+              <calcite-combobox-item value="layer7-1" text-label="VDR點位圖資"></calcite-combobox-item>
+              <calcite-combobox-item value="layer7-2" text-label="蚵架點位圖資"></calcite-combobox-item>
+              <calcite-combobox-item value="layer7-3" text-label="魚塭點位圖資"></calcite-combobox-item>
+            </calcite-combobox-item>
+            -->
+					</calcite-combobox>
+
+					<div id="layerShow" class="layerShowClass" style="display: none;">
+						<div style="text-align: center;margin: 1px;">※ 圖資控制 ※</div>
+					</div>
+				</div>
+
+
+				<div id="arcgisBtRight">
+					<div id="attrId" class="attrClass">
+						<div>暫無位置</div>
+					</div>
+				</div>
+			</div>
+			<div class="container">
+				<div id="upload_info" valign="center">
+					<h6>上傳檔案圖資(*.zip)</h6>
+					<h6 style="font-size: 5px;">系統錯誤請重啟頁面，此外欄位讀取編碼為UTF-8</h6>
+					<label for="input" style="font-size: 5px;">選擇具有座標系統之圖資:</label>
+					<input type="file" id="file" accept=".zip" style="font-size: 10px;"
+						onchange="document.getElementById('uploadIt').disabled = false">
+					<input type="submit" id="uploadIt" style="font-size: 10px;" disabled>
+
+					<span class="file-upload-status" style="opacity:1;" id="upload-status"></span>
+					<div id="upload-content"></div>
+				</div>
+				<div id="uploadOptInfo" hidden>
+					<label for="customRange3">透明度</label>
+					<span id="valBox"></span><br>
+					<input type="range" class="custom-range" min="1" max="10" step="1" id="customRange3" disabled>
+				</div>
+			</div>
+
+		</div>
+	</main>
+	
+	<div class="container">
+		<div th:include="components/footer :: footer"></div>
+	</div>
+	
+	<th:block th:replace="components/layout::global_utils_js" />
+	<th:block th:replace="components/layout::feather-icons_js" />
+	<th:block th:replace="components/layout::arcgisapi_foot_js" />
+	<th:block th:replace="components/layout::gis_platform_foot_static" />
+	<th:block th:replace="components/layout::gis_utils_js" />
+	
+	<script>
+		window.onload = function () {
+			readAndSetMapServiceWidget();
+			readAndSetLayerServiceWidget();
+
+			let orgCoordinateDisplayNode = document.getElementsByClassName('esri-coordinate-conversion__display')[0];
+			orgCoordinateDisplayNode.addEventListener('DOMNodeInserted',
+				function () {
+					let pntSplit = orgCoordinateDisplayNode.innerHTML.split(",")
+					let html = "WGS84: " + orgCoordinateDisplayNode.innerHTML + "<br>";
+					let twd97Array = lonlat2twd97(
+						pntSplit[0].trim().substring(0, pntSplit[0].trim().length - 2),
+						pntSplit[1].trim().substring(0, pntSplit[1].trim().length - 2));
+					html += "TWD97: " + twd97Array;
+					document.getElementById("attrId").innerHTML = html;
+				}, false);
+			document.getElementsByClassName("esri-attribution__powered-by")[0].innerHTML = "&copy;中華民國航空測量及遙感探測學會 2021-2022";
+			
+			// 修改zoom in out圖片
+			var plusIcon = document.getElementsByClassName("esri-icon-plus")[0];
+			plusIcon.classList.add("esri-icon-zoom-in-magnifying-glass");
+			plusIcon.classList.remove("esri-icon-plus");
+			var minusIcon = document.getElementsByClassName("esri-icon-minus")[0];
+			minusIcon.classList.add("esri-icon-zoom-out-magnifying-glass");
+			minusIcon.classList.remove("esri-icon-minus");
+			document.getElementById("viewDiv").style.height = (screen.availHeight * 0.78) + "px";
+			setUnblockUI();
+		}
+	</script>
+
+</body>
+
+</html>

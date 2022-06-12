@@ -1,0 +1,83 @@
+.esri-view-surface,
+.esri-view-surface--touch-none {
+    border-radius: 5px !important;
+}
+
+/*修改原有弹窗的css样式
+	https://blog.csdn.net/qq_43066675/article/details/108873124
+*/
+[class*="esri-popup--is-docked-top-"] .esri-popup__footer,
+[class*="esri-popup--aligned-bottom-"] .esri-popup__footer {
+    border-bottom: solid 1px #F5F5F5;
+}
+
+.esri-popup__header {
+    border-radius: 5px !important;
+    background-color: #F5F5F5;
+    color: #000000;
+}
+
+
+.esri-popup__header-title {
+    background-color: #F5F5F5 !important;
+    color: #000000 !important;
+}
+
+.esri-popup__header-container,
+.esri-popup__header-container--button {
+    background-color: #F5F5F5 !important;
+    outline: none !important;
+}
+
+.esri-popup__icon,
+.esri-icon-close {
+    color: #000000 !important;
+}
+
+/*.esri-view-width-xlarge */
+.esri-popup__main-container {
+    background-color: #F5F5F5 !important;
+    color: #000000 !important;
+    width: 200px !important;
+    border-color: #000000 #000000 #000000 #000000 !important;
+    border-radius: 5px !important;
+}
+
+.esri-popup__inline-actions-container {
+    display: none;
+}
+
+.esri-feature-content {
+    background-color: #F5F5F5 !important;
+}
+
+
+.esri-ui .esri-popup {
+    border-radius: 5px !important;
+}
+
+.esri-popup__header-title {
+    font-weight: 100 !important;
+}
+
+.attrClass {
+    padding: 8px;
+    width: 300px;
+    height: 50px;
+    background-color: #F8F8FF;
+    font-size: 5px;
+    text-align: center;
+    color: black;
+}
+
+.esri-coordinate-conversion {
+    display: none;
+}
+
+.esri-attribution .esri-attribution__sources {
+    display: none;
+}
+
+.esri-attribution__powered-by {
+    color: black !important;
+}

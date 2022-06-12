@@ -5,13 +5,10 @@
     <meta charset="UTF-8">
     <title>天氣站點管理</title>
 
-    <th:block th:replace="components/layout::common_head_css" />
-	<th:block th:replace="components/layout::arcgis_head_css" />
-	<link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
-	
-    <th:block th:replace="components/layout::common_head_js" />
-	<script src="/csprscbw/js/cbw_station/index.js"></script>	
-    <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+	<th:block th:replace="components/layout::bootstrap_head_css" />
+	<th:block th:replace="components/layout::arcgisapi_head_css" />
+	<th:block th:replace="components/layout::global_utils_js" />
+	<th:block th:replace="components/layout::cbwstation_index_head_static" />
 
 	<style>
 		.ui-dialog-titlebar{background-color:#c2c2c2;}
@@ -215,8 +212,9 @@
 		</calcite-action-group>
 	</calcite-action-bar>
 	
-	<th:block th:replace="components/layout::arcgis_foot_js" />
-	<script src="/csprscbw/js/cbw_station/arcgis.js"></script>
+	<th:block th:replace="components/layout::gis_utils_js" />
+	<th:block th:replace="components/layout::arcgisapi_foot_js" />
+	<th:block th:replace="components/layout::cbwstation_index_foot_static" />
 </body>
 	<script>
 		$(function() {

@@ -11,8 +11,8 @@
 }
 
 /*修改原有弹窗的css样式
-        https://blog.csdn.net/qq_43066675/article/details/108873124
-        */
+	https://blog.csdn.net/qq_43066675/article/details/108873124
+*/
 [class*="esri-popup--is-docked-top-"] .esri-popup__footer,
 [class*="esri-popup--aligned-bottom-"] .esri-popup__footer {
     border-bottom: solid 1px #F5F5F5;
