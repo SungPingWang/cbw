@@ -13,13 +13,16 @@ require([
   "esri/layers/GraphicsLayer",
   "esri/layers/TileLayer",
   "esri/layers/WMTSLayer",
-  "esri/widgets/Measurement"
+  "esri/widgets/Measurement",
+  "esri/widgets/Search",
+  "esri/core/Accessor"
+
 ], function (
   Map, MapView, UI,
   Graphic, Point, PopupTemplate, watchUtils,
   CoordinateConversion, Conversion, Format,
   GeoJSONLayer, GraphicsLayer, TileLayer, WMTSLayer,
-  Measurement
+  Measurement, Search, Accessor
 ) {
   setblockUI();
   // ****************************************************************************
@@ -44,11 +47,11 @@ require([
     "WMap5": ["https://wmts.nlsc.gov.tw/wmts/電子地圖", "電子地圖(通用版)"],
     "WMap6": ["https://wmts.nlsc.gov.tw/wmts/混合地圖", "混合地圖(通用版)"],
     "WMap7": ["https://wmts.nlsc.gov.tw/wmts/段籍圖", "段籍圖(通用版)"],
-    "WMap8": ["https://wmts.nlsc.gov.tw/wmts/5000圖幅框", "1/5000圖幅框(通用版)"],
-    "WMap9": ["osm", "OpenStreetMapLayer"],
-    "WMap10": ["streets", "Google地圖街道"],
-    "WMap11": ["satellite", "Google衛星"],
-    "WMap12": ["hybrid", "Google混和地圖"]
+    "WMap8": ["https://wmts.nlsc.gov.tw/wmts/5000圖幅框", "1/5000圖幅框(通用版)"]
+    //"WMap9": ["osm", "OpenStreetMapLayer"],
+    //"WMap10": ["streets", "Google地圖街道"],
+    //"WMap11": ["satellite", "Google衛星"],
+    //"WMap12": ["hybrid", "Google混和地圖"]
   }
   var tempTileLayer = "https://fa.idv.tw/mapweb/rest/services/FA_AIR_3857/MapServer";
   var WMTS_urlBase = "https://wmts.nlsc.gov.tw/wmts";
@@ -263,62 +266,40 @@ require([
   // ****************************************************************************
   // ****************************************************************************
   // 選擇添加的底圖(Raster)
-  var FA_AIR_3857_Layer = new TileLayer({
+  /*var FA_AIR_3857_Layer = new TileLayer({
     id: "tempTileLayer",
     url: tempTileLayer
-  });
+  });*/
   // ****************************************************************************
   // ****************************************************************************
-  // 選一個好用但是繁瑣的好了
-  // 選擇TileLayer底圖
+  // 選一個好用但是繁瑣的好了，PS這裡是地圖服務，不是切換baseMap底圖的(這個另外有其他的按鈕喔)
+  // 選擇TileLayer地圖服務
   var WMapFunc = function (url) {
     let url_split;
     let LayerType;
     let layerss = map.layers;
-    // 判斷是不是取消圖層
+    // 1 判斷是不是取消地圖服務
     if (url == "noWMap") {
       for (let lyr of layerss) {
-        if (lyr.url == tempTileLayer) {
+	  	// 1.1 首先刪除所有的tileLayer與webTileLayer(.png為尾的)
+        if (lyr.url == tempTileLayer || lyr.id == "webTileLayer") {
           map.layers.remove(lyr);
         }
-        if (lyr.id == "webTileLayer") {
-          map.layers.remove(lyr);
-        }
+		// 1.2 因為是取消圖層，所以要重新添加baseMap服務
         map.basemap = basemapList[basemapStartPosition];
-        break;
       }
-    } else if (url == "streets" || url == "satellite" || url == "hybrid" || url == "osm") {
-      // 判斷是不是"streets" "satellite" "hybrid"之一
-      map.basemap = null;
-      for (let lyr of layerss) {
-        if (lyr.url == tempTileLayer) {
-          map.layers.remove(lyr);
-        }
-        if (lyr.id == "webTileLayer") {
-          map.layers.remove(lyr);
-        }
-        break;
-      }
-      map.basemap = url;
-      tempTileLayer = url;
-    } else {
+    // 2 如果是其他的地圖服務
+	} else {
       url_split = url.split("/");
       LayerType = url_split[url_split.length - 1];
-      // basemap一律去掉
-      // map.basemap = null;
-      // 便利所有
+      // 如果以後要設定basemap一律去掉的話: map.basemap = null;
+      // 2.1 刪除所有的tileLayer與webTileLayer(.png為尾的)
       for (let lyr of layerss) {
-        if (lyr.url == tempTileLayer || tempTileLayer == "streets" || tempTileLayer == "satellite" || tempTileLayer == "hybrid" || tempTileLayer == "osm" || lyr.id == "webTileLayer") {
-          if (lyr.url == tempTileLayer) {
-            map.layers.remove(lyr);
-          }
-          if (lyr.id == "webTileLayer") {
-            map.layers.remove(lyr);
-          }
-          break;
+        if (lyr.url == tempTileLayer || lyr.id == "webTileLayer") {
+          map.layers.remove(lyr);
         }
       }
-      if (LayerType == "MapServer") {
+      if (LayerType == "MapServer") { // 目前好像還沒有這個東西
         let tileLayer = new TileLayer({ url: url });
         map.add(tileLayer, 0);
         tempTileLayer = url;
@@ -382,7 +363,7 @@ require([
         });
         map.add(wmtsLayer, 0);
         tempTileLayer = url;
-      } else if (url.endsWith('.png')) {
+      } else if (url.endsWith('.png')) { // 目前好像也還沒有這個
         var webTileLayer = new WebTileLayer({
           id: "webTileLayer",
           urlTemplate: url
@@ -393,20 +374,20 @@ require([
       }
     }
   }
+  // 建立圖資的點擊事件(其中要添加取消服務的功能)
   var dropdownMenu1 = document.getElementById("dropdownMenu1");
   dropdownMenu1.addEventListener("change", function () {
     var opt = dropdownMenu1.value;
     var optGet = mapObj[opt];
     WMapFunc(optGet[0]);
-    document.getElementById("noWMap").innerHTML = "取消圖資";
-    updateLastStep("切換圖資服務");
+    document.getElementById("noWMap").innerHTML = "取消地圖服務";
+    updateLastStep("切換地圖服務");
   })
   // ****************************************************************************
   // ****************************************************************************
   // 定位
-  const locationButton = document.getElementById('location');
+  let locationButton = document.getElementById('location');
   function geoFindMe() {
-
     function success(position) {
       let latitude = position.coords.latitude;
       let longitude = position.coords.longitude;
@@ -416,12 +397,12 @@ require([
         center: [longitude, latitude],
         zoom: 20
       })
-      const point = { //Create a point
+      let point = { //Create a point
         type: "point",
         longitude: longitude,
         latitude: latitude
       };
-      const simpleMarkerSymbol = {
+      let simpleMarkerSymbol = {
         type: "simple-marker",
         color: [226, 119, 40],  // Orange
         outline: {
@@ -429,8 +410,8 @@ require([
           width: 1
         }
       };
-      const graphicsLayer = new GraphicsLayer();
-      const pointGraphic = new Graphic({
+      let graphicsLayer = new GraphicsLayer();
+      let pointGraphic = new Graphic({
         geometry: point,
         symbol: simpleMarkerSymbol
       });
@@ -438,13 +419,12 @@ require([
       map.add(graphicsLayer);
       updateLastStep("定位");
     }
-
     function error() {
       //status.textContent = 'Unable to retrieve your location';
+	  alert("無法獲取您的確切位置時發生錯誤，請重試。");
     }
-
     if (!navigator.geolocation) {
-      //status.textContent = 'Geolocation is not supported by your browser';
+      alert("無法獲取您的確切位置，請檢察您是否有開啟位置設定。");
     } else {
       //status.textContent = 'Locating…';
       navigator.geolocation.getCurrentPosition(success, error);
@@ -454,15 +434,14 @@ require([
   // ****************************************************************************
   // ****************************************************************************
   // 測量
-  // document get widgets
-  const distanceButton = document.getElementById('distance');
-  const areaButton = document.getElementById('area');
-  const clearButton = document.getElementById('clear');
+  let distanceButton = document.getElementById('distance');
+  let areaButton = document.getElementById('area');
+  let clearButton = document.getElementById('clear');
   // Create new instance of the Measurement widget
-  const measurement = new Measurement();
+  let measurement = new Measurement();
   // function of distance measurement 
   function distanceMeasurement() {
-    const type = view.type;
+    let type = view.type;
     measurement.activeTool = type.toUpperCase() === "2D" ? "distance" : "direct-line";
     distanceButton.classList.add("active");
     view.ui.add(measurement, "top-right");
@@ -472,7 +451,7 @@ require([
   }
   // Call the appropriate AreaMeasurement2D or AreaMeasurement3D
   function areaMeasurement() {
-    const type = view.type;
+    //const type = view.type;
     measurement.activeTool = "area";
     distanceButton.classList.remove("active");
     view.ui.add(measurement, "top-right");
@@ -499,7 +478,7 @@ require([
   });
   // ****************************************************************************
   // ****************************************************************************
-  // layer
+  // layer 圖資服務
   let layerChosenComboboxItem = document.getElementById("layerChosenComboboxItem");
   layerChosenComboboxItem.addEventListener("calciteComboboxChange", function (event) {
 	let selectedItems = event.detail.selectedItems;
@@ -527,28 +506,11 @@ require([
     featureLayerArr = cpFeatureLayerArr;
 	
 	if(addFeatureLayer != ""){
-		if(addFeatureLayer == "villageLyr"){
+		if(addFeatureLayer == "villageLyr" || addFeatureLayer == "cbwLyr"){
 			let mockDataPath = MockLyrData[addFeatureLayer + "Mock"]["path"];
+			let mockDataRender = MockLyrData[addFeatureLayer + "Mock"]["renderer"];
+			let mockDataTemplate = MockLyrData[addFeatureLayer + "Mock"]["template"];
 			let geoJson = getGeoJson(mockDataPath);
-			
-			let geoJsonRenderer = {
-			  	type: "simple", 
-			  	symbol: { 
-					type: "simple-fill",
-					color: "rgba(60, 179, 113, 0.2)",
-		            outline: {
-		              color: "white"
-		            }
-				},  
-			};
-			var geoJsonHtml = "<table class='data'><tr><td scope='row'>縣市鄉鎮</td><td scope='col'>{COUNTY}{TOWN}</td></tr>";
-			geoJsonHtml += "<tr><td scope='row'>村里名稱</td><td scope='col'>{VILLAGE}</td></tr>";
-			geoJsonHtml += "</table>";
-			var geoJsonTemplate = {
-				title: "縣市",
-				content: geoJsonHtml,
-				outFields: ["*"]
-			}
 			// 添加taiwanCounty geojson圖層
 			var geoJsonBlob = new Blob([geoJson], {
 		    	type: "application/json"
@@ -557,12 +519,12 @@ require([
 		  	var geoJsonLayer = new GeoJSONLayer({ 
 				id: addFeatureLayer,
 				url: geoJsonBlobUrl,
-				renderer: geoJsonRenderer,
+				renderer: mockDataRender,
 				popupEnabled: true,
 				visible: true,
 				outfields: ["*"]
 			});
-			geoJsonLayer.popupTemplate = geoJsonTemplate;
+			geoJsonLayer.popupTemplate = mockDataTemplate;
 			map.add(geoJsonLayer, 0);
 			let html = "<div id='" + addFeatureLayer + "-ctl' class='row' style='height: 30px;'>";
 	     	html += "<div class='col-5'><p class='float-start'>";
@@ -573,24 +535,24 @@ require([
 	      	html += "</p></div></div>";  
 	      	document.getElementById("layerShow").innerHTML += html;
 		} else {
-	      let tmpGraphicsLayer = new GraphicsLayer({ id: addFeatureLayer });
-	      let getMockData = MockLyrData[addFeatureLayer + "Mock"];
-	      let tempGraphic = new Graphic({
-	        geometry: getMockData.polygon,
-	        symbol: getMockData.symbol,
-	        attributes: getMockData.attributes,
-	        popupTemplate: getMockData.popupTemplate
-	      });
-	      tmpGraphicsLayer.add(tempGraphic);
-	      map.add(tmpGraphicsLayer);
-	      let html = "<div id='" + addFeatureLayer + "-ctl' class='row' style='height: 30px;'>";
-	      html += "<div class='col-5'><p class='float-start'>";
-	      html += "。" + addFeatureLayer + "</p></div>";
-	      html += "<div class='col-5'><input id='" + addFeatureLayer + "-opScroll' type='range' min='1' max='10' step='1' style='width:100px;' class='scrollLayerOpacity'></div>";
-	      html += "<div class='col-2'><p class='float-end'>";
-	      html += "<button id='" + addFeatureLayer + "-mvBtn' type='button' class='btn btn-success btn-sm moveLayerBtn'>移動</button>";
-	      html += "</p></div></div>";  
-	      document.getElementById("layerShow").innerHTML += html;
+	      	let tmpGraphicsLayer = new GraphicsLayer({ id: addFeatureLayer });
+	      	let getMockData = MockLyrData[addFeatureLayer + "Mock"];
+	      	let tempGraphic = new Graphic({
+	        	geometry: getMockData.polygon,
+	        	symbol: getMockData.symbol,
+	        	attributes: getMockData.attributes,
+	        	popupTemplate: getMockData.popupTemplate
+	      	});
+	      	tmpGraphicsLayer.add(tempGraphic);
+	      	map.add(tmpGraphicsLayer);
+	      	let html = "<div id='" + addFeatureLayer + "-ctl' class='row' style='height: 30px;'>";
+	      	html += "<div class='col-5'><p class='float-start'>";
+	      	html += "。" + addFeatureLayer + "</p></div>";
+	      	html += "<div class='col-5'><input id='" + addFeatureLayer + "-opScroll' type='range' min='1' max='10' step='1' style='width:100px;' class='scrollLayerOpacity'></div>";
+	      	html += "<div class='col-2'><p class='float-end'>";
+	      	html += "<button id='" + addFeatureLayer + "-mvBtn' type='button' class='btn btn-success btn-sm moveLayerBtn'>移動</button>";
+	      	html += "</p></div></div>";  
+	      	document.getElementById("layerShow").innerHTML += html;
     	}
 	}
 	
@@ -611,10 +573,16 @@ require([
       let layerId = layerBtn.id; 
       layerBtn.addEventListener("click", function(){
         for (let lyr of map.layers){
-          if(layerId == lyr.id + "-mvBtn"){ 
-            view.goTo({
-              geometry: lyr.graphics.items[0].geometry
-            });
+          if(layerId == lyr.id + "-mvBtn"){
+			let tmpExtent;
+			if(lyr.graphics != null){
+				tmpExtent = lyr.graphics.items[0].geometry;
+			}else{
+				tmpExtent = lyr.fullExtent;
+			}
+			view.goTo({
+	        	geometry: tmpExtent
+	        });
           }
         }
       });
@@ -648,6 +616,31 @@ require([
   })
   // ****************************************************************************
   // ****************************************************************************
-  var taiwanVillageGeoJson = "/csprscbw/taiwanVillage.geojson";
-  
+  // 定位搜尋功能
+  let searchWidget = new Search({
+	label: "查詢結果",
+	returnGeometry: true,
+	view: view
+  });
+  view.ui.add(searchWidget, {
+	position: "top-right"
+  });
+  searchWidget.visible = false; // 關閉不要被看到
+  // 點擊定位搜尋會開啟dialog
+  document.getElementById("srhLocationDialog").addEventListener("click", function(){
+	var title = "查詢位置";
+	$("#searchLocationDialog").dialog("option", "title", title);
+	$("#searchLocationDialog").dialog("open");
+  });
+  // 點擊dialog中的查詢按鈕就可進行查詢search功能
+  document.getElementById("searchLocation").addEventListener("click", function(){
+	let district = document.getElementById("districtInput").value;
+	let city = document.getElementById("cityInput").value;
+	let road = document.getElementById("roadInput").value;
+	let detail = document.getElementById("detailInput").value;
+	$("#searchLocationDialog").dialog("close");
+	searchWidget.search(city+district+road+detail);
+  })  
+  // ****************************************************************************
+  // ****************************************************************************
 });

@@ -161,7 +161,7 @@ var arcgisInit = function() {
 			var twd97Array = lonlat2twd97(
 				pntSplit[0].trim().substring(0, pntSplit[0].trim().length - 2),
 				pntSplit[1].trim().substring(0, pntSplit[1].trim().length - 2));
-			html += "twd97: " + twd97Array;
+			html += "TWD97: " + twd97Array;
 			document.getElementById("attrId").innerHTML = html;
 		}, false);
 	document.getElementsByClassName("esri-attribution__powered-by")[0].innerHTML = "&copy;中華民國航空測量及遙感探測學會 2021-2022";

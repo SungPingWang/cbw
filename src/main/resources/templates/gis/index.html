@@ -9,6 +9,14 @@
 	<th:block th:replace="components/layout::arcgisapi_head_css" />
 	<th:block th:replace="components/layout::gis_platform_head_static" />
 
+	<style>
+		.ui-dialog-titlebar{background-color:#c2c2c2;}
+		.ui-dialog .ui-dialog-titlebar-close
+		{
+		  background-image: url(https://cdnjs.cloudflare.com/ajax/libs/aui/6.0.1/aui/css/icons/aui-icon-close.png);
+		  z-index:999999;
+		}
+	</style>
 </head>
 
 <body>
@@ -22,7 +30,7 @@
 						<span class="input-group-text" id="basic-addon3">選擇功能：</span>
 						<div class="form-group d-flex justify-content-center">
 							<select class="form-control" id="dropdownMenu1" style="width:200px;">
-								<option id="noWMap" value="noWMap">選擇圖資服務</option>
+								<option id="noWMap" value="noWMap">選擇地圖服務</option>
 								<!--
                 <optgroup label="一般">
                   <option id="WMap4" value="WMap4">正射影像圖(通用版)</option>
@@ -40,7 +48,8 @@
                 -->
 							</select>
 						</div>
-						<button id="location" class="btn btn-outline-secondary btn-sm" type="button">定位</button>
+						<button id="srhLocationDialog" class="btn btn-outline-secondary btn-sm" type="button">定位搜尋</button>
+						<button id="location" class="btn btn-outline-secondary btn-sm" type="button">我的位置</button>
 						<button id="refresh" class="btn btn-outline-secondary btn-sm" type="button"
 							onclick="location.reload();">刷新</button>
 						<div class="btn-group dropdown">
@@ -139,15 +148,44 @@
 					<input type="range" class="custom-range" min="1" max="10" step="1" id="customRange3" disabled>
 				</div>
 			</div>
-
 		</div>
 	</main>
 	
-	<div class="container">
-		<div th:include="components/footer :: footer"></div>
+	<div id="searchLocationDialog" class="container">
+		<div class="row g-3">
+		  <div class="col-md-6">
+		    <label for="cityInput" class="form-label">選擇縣市</label>
+		    <select id="cityInput" class="form-select">
+		    </select>
+		  </div>
+		  <div class="col-md-6">
+		    <label for="districtInput" class="form-label">選擇區段</label>
+		    <select id="districtInput" class="form-select">
+				<option selected>選擇區段</option>
+		    </select>
+		  </div>
+		  <div class="col-md-6">
+		    <label for="roadInput" class="form-label">選擇路段</label>
+		    <select id="roadInput" class="form-select">
+		      <option selected>選擇路段</option>
+		    </select>
+		  </div>
+		  <div class="col-md-6">
+		    <label for="detailInput" class="form-label">細項</label>
+		    <input type="detailInput" class="form-control" id="detailInput">
+		  </div>
+		  <div class="col-6">
+		    <button id="searchLocation" class="btn btn-success">查詢</button>
+		  </div>
+		  <div class="col-6">
+		    <div id="test"></div>
+		  </div>
+		</div>
 	</div>
 	
 	<th:block th:replace="components/layout::global_utils_js" />
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+	<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
 	<th:block th:replace="components/layout::feather-icons_js" />
 	<th:block th:replace="components/layout::arcgisapi_foot_js" />
 	<th:block th:replace="components/layout::gis_platform_foot_static" />
@@ -158,29 +196,23 @@
 			readAndSetMapServiceWidget();
 			readAndSetLayerServiceWidget();
 
-			let orgCoordinateDisplayNode = document.getElementsByClassName('esri-coordinate-conversion__display')[0];
-			orgCoordinateDisplayNode.addEventListener('DOMNodeInserted',
-				function () {
-					let pntSplit = orgCoordinateDisplayNode.innerHTML.split(",")
-					let html = "WGS84: " + orgCoordinateDisplayNode.innerHTML + "<br>";
-					let twd97Array = lonlat2twd97(
-						pntSplit[0].trim().substring(0, pntSplit[0].trim().length - 2),
-						pntSplit[1].trim().substring(0, pntSplit[1].trim().length - 2));
-					html += "TWD97: " + twd97Array;
-					document.getElementById("attrId").innerHTML = html;
-				}, false);
-			document.getElementsByClassName("esri-attribution__powered-by")[0].innerHTML = "&copy;中華民國航空測量及遙感探測學會 2021-2022";
-			
-			// 修改zoom in out圖片
-			var plusIcon = document.getElementsByClassName("esri-icon-plus")[0];
-			plusIcon.classList.add("esri-icon-zoom-in-magnifying-glass");
-			plusIcon.classList.remove("esri-icon-plus");
-			var minusIcon = document.getElementsByClassName("esri-icon-minus")[0];
-			minusIcon.classList.add("esri-icon-zoom-out-magnifying-glass");
-			minusIcon.classList.remove("esri-icon-minus");
+			arcgisInit();
 			document.getElementById("viewDiv").style.height = (screen.availHeight * 0.78) + "px";
 			setUnblockUI();
+			
+			
+			var json = JSON.parse(getGeoJson("/csprscbw/taiwanRoadSearch.json"));
+			buildSearchLocationWidget(json);
+			$( "#searchLocationDialog" ).dialog({
+				bgiframe: true,
+				autoOpen: false,
+				width: 600,
+				height: 300,
+				modal: true,
+				closeText: "hide"
+			});
 		}
+		
 	</script>
 
 </body>

@@ -39,6 +39,12 @@ public class CbwController {
 	@Autowired 
 	private CbwService cbwService;
 	
+	// 防止有些人沒有打index
+	@RequestMapping()
+	public String index() {
+		return "redirect:/cwb/index";
+	}
+	
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String IndexController(Map<String, Object> map, HttpSession session) {
 		session.removeAttribute("CityLatestCBWBeans");

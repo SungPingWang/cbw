@@ -2,8 +2,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
-<script src="./assets/dist/js/jquery.min.js"></script>
+<title>伺服器出現錯誤</title>
+<th:block th:replace="components/layout::global_utils_js" />
 <style>
 	/**/
 	:root {
@@ -152,13 +152,13 @@
 	  }, 1000);
 	});
 </script>
-<link href="https://fonts.googleapis.com/css?family=Encode+Sans+Semi+Condensed:100,200,300,400" rel="stylesheet">
+<th:block th:replace="components/layout::500_font_css" />
 </head>
 <body class="loading">
   <h1>500</h1>
   <h2>
   	error from server &nbsp&nbsp<b>:(</b> &nbsp&nbsp
-  	<a href="/csprscbw/cbw/index" class="button btn-effect">Go Home</a>
+  	<a href="/csprscbw/cwb/index" class="button btn-effect">Go Home</a>
   </h2>
   <div class="gears">
     <div class="gear one">

@@ -3,7 +3,7 @@
 </th:block>
 <th:block th:fragment="bootstrap_head_css">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" >
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+	<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>-->
 	<link rel="icon" href="/csprscbw/favicon.ico">
 </th:block>
 <th:block th:fragment="arcgisapi_head_css">
@@ -64,6 +64,10 @@
 </th:block>-->
 <!-- **************************************** -->
 <!-- **************************************** -->
+<!-- account -->
+<th:block th:fragment="account_index_head_static">
+	<script src="/csprscbw/js/account/index.js"></script>
+</th:block>
 <!-- cbw -->
 <th:block th:fragment="cbw_index_head_static">
 	<link rel="stylesheet" href="/csprscbw/css/cbw_home/arcgis.css">
@@ -89,8 +93,22 @@
 	<script src="https://cdn.rawgit.com/calvinmetcalf/shapefile-js/gh-pages/dist/shp.js"></script>
 	<script src="/csprscbw/js/gis/mockData.js"></script>
 	<script src="/csprscbw/js/gis/constants.js"></script>
-</th:block>
+	</th:block>
 <th:block th:fragment="gis_platform_foot_static">
   	<script src="/csprscbw/js/gis/index.js"></script>
 	<script src="/csprscbw/js/gis/gisIndex.js"></script>
+</th:block>
+<!-- 404 -->
+<th:block th:fragment="404_font_css">
+	<link href="https://fonts.googleapis.com/css?family=Cabin:400,700" rel="stylesheet">
+</th:block>
+<!-- 500 -->
+<th:block th:fragment="500_font_css">
+	<link href="https://fonts.googleapis.com/css?family=Encode+Sans+Semi+Condensed:100,200,300,400" rel="stylesheet">
+</th:block>
+<!-- pwdForgotReset -->
+<th:block th:fragment="pwdForgotReset_static">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" >
+    <link href="/csprscbw/css/system/pwdForgotReset.css" rel="stylesheet">
 </th:block>

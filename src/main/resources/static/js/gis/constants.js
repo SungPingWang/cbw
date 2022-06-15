@@ -5,14 +5,14 @@ var Constants = {
             {"id": "WMap5", "name": "電子地圖(通用版)"},
             {"id": "WMap6", "name": "混合地圖(通用版)"},
             {"id": "WMap7", "name": "段籍圖(通用版)"},
-            {"id": "WMap8", "name": "1/5000圖幅框(通用版)"},
-            {"id": "WMap9", "name": "OpenStreetMap"}
-        ],
-        "googlemap": [
-            {"id": "WMap10", "name": "地圖"},
-            {"id": "WMap11", "name": "衛星影像"},
-            {"id": "WMap12", "name": "混合"}
+            {"id": "WMap8", "name": "1/5000圖幅框(通用版)"}
+            //{"id": "WMap9", "name": "OpenStreetMap"}
         ]
+        //"googlemap": [
+        //    {"id": "WMap10", "name": "地圖"},
+        //    {"id": "WMap11", "name": "衛星影像"},
+        //    {"id": "WMap12", "name": "混合"}
+        //]
     },
     "layerService": {
         "normal": [
