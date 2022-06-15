@@ -640,6 +640,11 @@ require([
 	let detail = document.getElementById("detailInput").value;
 	$("#searchLocationDialog").dialog("close");
 	searchWidget.search(city+district+road+detail);
+	searchWidget.on("search-complete", function(searchcomplete){
+	  if(searchcomplete.numResults == 0){
+		alert("查無此相關條件：", searchcomplete.searchTerm);
+	  }
+	});
   })  
   // ****************************************************************************
   // ****************************************************************************
