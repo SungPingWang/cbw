@@ -35,6 +35,7 @@ public class Constant {
 	public final static int RESET_PWD_MAILSENDER_EXPIRED = 1; // 登入封鎖期限(天)
 	
 	/* 可能會用到的相關路徑 */
+	public final static String BASE_PATH = "/csprscbw/";
 	public final static String HOME_PATH = "/csprscbw/cwb/index";
 	public final static String LOGIN_PATH = "/csprscbw/login";
 	public final static String CAPTCHA_PATH = "/csprscbw/code/image";

@@ -506,7 +506,7 @@ require([
     featureLayerArr = cpFeatureLayerArr;
 	
 	if(addFeatureLayer != ""){
-		if(addFeatureLayer == "villageLyr" || addFeatureLayer == "cbwLyr"){
+		if(addFeatureLayer == "villageLyr" || addFeatureLayer == "cbwLyr" || addFeatureLayer == "countyLyr"){
 			let mockDataPath = MockLyrData[addFeatureLayer + "Mock"]["path"];
 			let mockDataRender = MockLyrData[addFeatureLayer + "Mock"]["renderer"];
 			let mockDataTemplate = MockLyrData[addFeatureLayer + "Mock"]["template"];

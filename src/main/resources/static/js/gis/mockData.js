@@ -83,5 +83,23 @@ var MockLyrData = {
 			"outFields": ["*"],
 			"content": "<table class='data'><tr><td scope='row'>村里名稱</td><td scope='col'>{VILLAGE}</td></tr></table>"
 		}
+	},
+	"countyLyrMock": {
+		"path": "/csprscbw/taiwanCounty.geojson",
+		"renderer": {
+			type: "simple", 
+			symbol: { 
+			type: "simple-fill",
+				color: "rgba(60, 179, 113, 0.2)",
+		  		outline: {
+		 			color: "white"
+				}
+			}
+		},
+		"template": {
+			"title": "縣市名稱",
+			"outFields": ["*"],
+			"content": "<table class='data'><tr><td scope='row'>縣市代碼</td><td scope='col'>{COUNTY_ID}</td></tr><tr><td scope='row'>縣市名稱</td><td scope='col'>{COUNTY}</td></tr></table>"
+		}
 	}
 }
