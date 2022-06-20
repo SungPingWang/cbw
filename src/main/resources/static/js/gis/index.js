@@ -626,7 +626,7 @@ require([
 					lyrQueryFieldSelect.disabled = true;
 				}
 			});
-			// 選擇欄位觸發事件
+			// 選擇欄位觸發事件 test
 			lyrQueryFieldSelect.addEventListener("change", function(){
 				let query = lyr.createQuery();
 				query.where =  lyrQueryFieldSelect.value + " = '" + lyrQueryFieldInput.value + "'";
