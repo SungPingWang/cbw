@@ -11,3 +11,16 @@ var setUnblockUI = function() {
 		$.unblockUI();
 	}, 2000);
 }
+var alertOneStackObject = function(obj){
+	var newLine = "'\r\n'";
+	var result = "";
+	for (var [key, value] of Object.entries(obj)) {
+		if(value == null){
+			value = "空值";
+		}
+		result += key + ": " + value;
+		result += newLine;
+	}
+	result = result.replaceAll("'", "");
+	return result;
+}

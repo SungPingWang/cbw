@@ -14,7 +14,6 @@
 	
 </head>
 <body class="center">
-	
 	<main class="form-signin">
 		<div class="alert alert-success" role="alert">
 		  	<!--<h4 class="alert-heading">Well done!</h4>-->
@@ -35,8 +34,16 @@
 			<input type="text" class="form-control mb-1" name="username" placeholder="帳號" id="usernameInput" />
 			<input type="password" class="form-control mb-1" name="password" placeholder="密碼" id="pwdInput" />
 			<span style="display: inline"> 
-				<input type="text" class="mb-1" name="imageCode" placeholder="驗證碼" style="width: 63%;" /> 
-				<img src="/csprscbw/code/image" style="border: 2px solid #212529;" />
+				<input type="text" class="mb-1" name="imageCode" placeholder="驗證碼" style="width:50%;height:30px;" /> 
+				<img id="captchaImg" src="/csprscbw/code/image" style="border: 2px solid #212529;width:30%;height:35px;" />
+				&nbsp;
+				<button type="button" class="btn btn-outline-secondary" title="重新整理"
+					onclick="document.getElementById('captchaImg').src='/csprscbw/code/image';">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+					  <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
+					  <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+					</svg>
+				</button>
 			</span>
 			<!--
 			<div class="checkbox mb-1">

@@ -182,6 +182,27 @@
 		  </div>
 		</div>
 	</div>
+		
+	<div id="lyrQueryFieldSelectDialog" class="container">
+		<br>
+		<input type="text" class="form-control" id="lyrQueryFieldInput" placeholder="請輸入關鍵字">
+		<hr>
+		<select class="form-select" aria-label="Default select example" id="lyrQueryFieldSelect" disabled>
+		  <option selected value="0">請選擇欄位</option>
+		</select>
+		<hr>
+		<div id="lyrQueryFieldCheck">
+			<!---->
+		</div>
+		<div class="d-grid gap-2">
+		  <button class="btn btn-primary" type="button" id="lyrQueryFieldSearch" disabled>查詢</button>
+		</div>
+		<hr>
+		<div class="form-floating">
+		  <textarea class="form-control" placeholder="Leave a comment here" id="lyrQueryFieldDescription" style="height: 200px"></textarea>
+		  <label for="lyrQueryFieldDescription">摘要</label>
+		</div>
+	</div>
 	
 	<th:block th:replace="components/layout::global_utils_js" />
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
@@ -208,6 +229,16 @@
 				autoOpen: false,
 				width: 600,
 				height: 300,
+				modal: true,
+				closeText: "hide"
+			});
+			
+			$( "#lyrQueryFieldSelectDialog" ).dialog({
+				title: "查詢關鍵字",
+				bgiframe: true,
+				autoOpen: false,
+				width: 600,
+				height: 600,
 				modal: true,
 				closeText: "hide"
 			});

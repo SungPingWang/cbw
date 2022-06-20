@@ -33,7 +33,7 @@
 
 .layerShowClass {
     padding: 8px;
-    width: 300px;
+    width: 400px;
     background-color: #F8F8FF;
     font-size: 5px;
 }
@@ -81,7 +81,7 @@ tfoot {
     height: 47px;
 }
 
-.moveLayerBtn {
+.moveLayerBtn, .queryLayerBtn{
     width: 50px;
     height: 25px;
     font-size: 5px;

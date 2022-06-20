@@ -20,7 +20,8 @@ var Constants = {
   			{"name": "countyLyr", "label": "縣市圖資", "url": "", status: 1},
             {"name": "cbwLyr", "label": "氣象局測站圖資", "url": "", status: 1},
             {"name": "roadSectionLyr", "label": "地段資料圖資", "url": "", status: 1},
-            {"name": "villageLyr", "label": "村里界圖資", "url": "", status: 1}
+            {"name": "villageLyr", "label": "村里界圖資", "url": "", status: 1},
+			{"name": "fishPool2020Lyr", "label": "2020魚塭圖資", "url": "", status: 1}
         ],
         "coa": [
             {"name": "layer7-1", "label": "VDR點位圖資", "url": "", status: 0},

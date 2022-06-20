@@ -15,14 +15,14 @@ require([
   "esri/layers/WMTSLayer",
   "esri/widgets/Measurement",
   "esri/widgets/Search",
-  "esri/core/Accessor"
-
+  "esri/core/Accessor",
+  "esri/geometry/Geometry"
 ], function (
   Map, MapView, UI,
   Graphic, Point, PopupTemplate, watchUtils,
   CoordinateConversion, Conversion, Format,
   GeoJSONLayer, GraphicsLayer, TileLayer, WMTSLayer,
-  Measurement, Search, Accessor
+  Measurement, Search, Accessor, Geometry
 ) {
   setblockUI();
   // ****************************************************************************
@@ -65,8 +65,8 @@ require([
 
   const view = new MapView({
     map: map,
-    center: [121.301, 23.4499], // Longitude, latitude
-    zoom: 9, // Zoom level
+    center: [121.5548, 25.0659], // Longitude, latitude
+    zoom: 15, // Zoom level
     container: "viewDiv" // Div element
   });
   // ****************************************************************************
@@ -102,15 +102,15 @@ require([
   // 2. 宣告一個方形polygon
   const polygon = {
     type: "polygon",
-    rings: [[121.2, 23.5], [121.3, 23.5], [121.3, 23.4], [121.2, 23.4], [121.2, 23.5]]
+    rings: [[121.55, 25.05], [121.56, 25.05], [121.56, 25.06], [121.55, 25.06], [121.55, 25.05]]
   };
   // 3. 方形polygon的symbology
   const simpleFillSymbol = {
     type: "simple-fill",
-    color: [255, 255, 255, 1.0],
+    color: [255, 215, 0, 0.5],
     style: "diagonal-cross",
     outline: {
-      color: [255, 255, 255, 1.0],
+      color: [255, 0, 0, 1.0],
       width: 3
     }
   };
@@ -506,10 +506,13 @@ require([
     featureLayerArr = cpFeatureLayerArr;
 	
 	if(addFeatureLayer != ""){
-		if(addFeatureLayer == "villageLyr" || addFeatureLayer == "cbwLyr" || addFeatureLayer == "countyLyr"){
+		if(addFeatureLayer == "villageLyr" || addFeatureLayer == "cbwLyr" || addFeatureLayer == "countyLyr" || addFeatureLayer == "fishPool2020Lyr"){
 			let mockDataPath = MockLyrData[addFeatureLayer + "Mock"]["path"];
 			let mockDataRender = MockLyrData[addFeatureLayer + "Mock"]["renderer"];
 			let mockDataTemplate = MockLyrData[addFeatureLayer + "Mock"]["template"];
+			let mockDataLabelClass = MockLyrData[addFeatureLayer + "Mock"]["labelClass"];
+			let mockDataCanQuery = MockLyrData[addFeatureLayer + "Mock"]["canQueryField"];
+			
 			let geoJson = getGeoJson(mockDataPath);
 			// 添加taiwanCounty geojson圖層
 			var geoJsonBlob = new Blob([geoJson], {
@@ -525,14 +528,20 @@ require([
 				outfields: ["*"]
 			});
 			geoJsonLayer.popupTemplate = mockDataTemplate;
+			if(mockDataLabelClass){
+				geoJsonLayer.labelingInfo = mockDataLabelClass;
+			}
 			map.add(geoJsonLayer, 0);
 			let html = "<div id='" + addFeatureLayer + "-ctl' class='row' style='height: 30px;'>";
-	     	html += "<div class='col-5'><p class='float-start'>";
+	     	html += "<div class='col-4'><p class='float-start'>";
 	      	html += "。" + addFeatureLayer + "</p></div>";
-	      	html += "<div class='col-5'><input id='" + addFeatureLayer + "-opScroll' type='range' min='1' max='10' step='1' style='width:100px;' class='scrollLayerOpacity'></div>";
-	      	html += "<div class='col-2'><p class='float-end'>";
+	      	html += "<div class='col-4'><input id='" + addFeatureLayer + "-opScroll' type='range' min='1' max='10' step='1' style='width:100px;' class='scrollLayerOpacity'></div>";
+	      	html += "<div class='col-4'><p class='float-end'><div class='btn-group' role='group' aria-label='Basic outlined example'>";
 	      	html += "<button id='" + addFeatureLayer + "-mvBtn' type='button' class='btn btn-success btn-sm moveLayerBtn'>移動</button>";
-	      	html += "</p></div></div>";  
+			if(mockDataCanQuery.length > 0){
+				html += "<button id='" + addFeatureLayer + "-qyBtn' type='button' class='btn btn-warning btn-sm queryLayerBtn'>查詢</button>";
+			}
+	      	html += "</div></p></div></div>";  
 	      	document.getElementById("layerShow").innerHTML += html;
 		} else {
 	      	let tmpGraphicsLayer = new GraphicsLayer({ id: addFeatureLayer });
@@ -546,12 +555,12 @@ require([
 	      	tmpGraphicsLayer.add(tempGraphic);
 	      	map.add(tmpGraphicsLayer);
 	      	let html = "<div id='" + addFeatureLayer + "-ctl' class='row' style='height: 30px;'>";
-	      	html += "<div class='col-5'><p class='float-start'>";
+	      	html += "<div class='col-4'><p class='float-start'>";
 	      	html += "。" + addFeatureLayer + "</p></div>";
-	      	html += "<div class='col-5'><input id='" + addFeatureLayer + "-opScroll' type='range' min='1' max='10' step='1' style='width:100px;' class='scrollLayerOpacity'></div>";
-	      	html += "<div class='col-2'><p class='float-end'>";
+	      	html += "<div class='col-4'><input id='" + addFeatureLayer + "-opScroll' type='range' min='1' max='10' step='1' style='width:100px;' class='scrollLayerOpacity'></div>";
+	      	html += "<div class='col-4'><p class='float-end'><div class='btn-group' role='group' aria-label='Basic outlined example'>";
 	      	html += "<button id='" + addFeatureLayer + "-mvBtn' type='button' class='btn btn-success btn-sm moveLayerBtn'>移動</button>";
-	      	html += "</p></div></div>";  
+	      	html += "</div></p></div></div>";  
 	      	document.getElementById("layerShow").innerHTML += html;
     	}
 	}
@@ -587,6 +596,90 @@ require([
         }
       });
     }
+	// 更新所有(查詢功能)
+    let queryLayerBtns = document.getElementsByClassName("queryLayerBtn");
+    for (let i = 0; i < queryLayerBtns.length; i++) {
+	  let lyrQueryFieldInput = document.getElementById("lyrQueryFieldInput");
+	  let lyrQueryFieldSelect = document.getElementById("lyrQueryFieldSelect");
+	  let lyrQueryFieldSearch = document.getElementById("lyrQueryFieldSearch");
+	  let lyrQueryFieldCheck = document.getElementById("lyrQueryFieldCheck");
+      let layerBtn = queryLayerBtns[i];
+      let layerId = layerBtn.id; 
+      let mockDataCanQuery = MockLyrData[layerId.split("-qyBtn")[0] + "Mock"]["canQueryField"];
+      // 點擊layer中的"查詢"按鈕後
+   	  layerBtn.addEventListener("click", function(){
+        for (let lyr of map.layers){
+	  	  // 找到對應的layer並且創建對應的選擇欄位列表html
+          if(layerId == lyr.id + "-qyBtn"){
+			// 開啟dialog
+			$("#lyrQueryFieldSelectDialog").dialog("open");
+			let lyrQueryFieldSelectHtml = "<option selected value='0'>請選擇欄位</option>";
+			for(let i=0; i<mockDataCanQuery.length; i++){
+				lyrQueryFieldSelectHtml += "<option value='"+mockDataCanQuery[i]+"'>"+mockDataCanQuery[i]+"</option>"
+			}
+			lyrQueryFieldSelect.innerHTML = lyrQueryFieldSelectHtml;
+			// 輸入查詢欄位觸發後
+			lyrQueryFieldInput.addEventListener("keyup", function(){
+				if(lyrQueryFieldInput.value.trim() != ""){
+					lyrQueryFieldSelect.disabled = false;
+				}else{
+					lyrQueryFieldSelect.disabled = true;
+				}
+			});
+			// 選擇欄位觸發事件
+			lyrQueryFieldSelect.addEventListener("change", function(){
+				let query = lyr.createQuery();
+				query.where =  lyrQueryFieldSelect.value + " = '" + lyrQueryFieldInput.value + "'";
+				query.outFields = ["*"];
+				lyr.queryFeatures(query).then(function(response){
+					if(response.features.length > 0){
+						lyrQueryFieldSelect.disabled = false;
+						lyrQueryFieldSearch.disabled = false;
+						let lyrQueryFieldCheckHtml = "";
+						for(let i=0; i<response.features.length; i++){
+							let x = response.features[i].geometry.extent.center.longitude;
+							let y = response.features[i].geometry.extent.center.latitude;
+							let keystr = response.features[i].attributes.KEYSTR;
+							lyrQueryFieldCheckHtml += "<div class='form-check'>";
+							if(i == 0){
+								lyrQueryFieldCheckHtml += "<input class='form-check-input' type='radio' name='lyrQueryFieldCheckRadio' id='lyrQueryFieldCheckRadio"+i+"' value='"+JSON.stringify([x,y])+"' checked>";
+							}else{
+								lyrQueryFieldCheckHtml += "<input class='form-check-input' type='radio' name='lyrQueryFieldCheckRadio' id='lyrQueryFieldCheckRadio"+i+"' value='"+JSON.stringify([x,y])+"' >";
+							}
+							lyrQueryFieldCheckHtml += "<label class='form-check-label' for='lyrQueryFieldCheckRadio"+i+"'>";
+							lyrQueryFieldCheckHtml += "<button id='"+keystr+"-detail' type='button' class='btn btn-outline-dark btn-sm' >"+keystr+"</button>";
+							lyrQueryFieldCheckHtml += "</label>";
+							lyrQueryFieldCheckHtml += "</div>";
+						}
+						lyrQueryFieldCheck.innerHTML = lyrQueryFieldCheckHtml;
+						for(let i=0; i<response.features.length; i++){
+							let keystr = response.features[i].attributes.KEYSTR;
+							let attr = alertOneStackObject(response.features[i].attributes);
+							document.getElementById(keystr+"-detail").addEventListener("click", function(){
+								document.getElementById("lyrQueryFieldDescription").value = attr;
+							})
+						}
+						lyrQueryFieldSearch.addEventListener("click", function(){
+							view.goTo({
+						    	center: JSON.parse($('input[name=lyrQueryFieldCheckRadio]:checked').val()),
+						        zoom: 20
+							})
+							lyrQueryFieldInput.value = "";
+							lyrQueryFieldSelect.disabled = true;
+							lyrQueryFieldSearch.disabled = true;
+							lyrQueryFieldCheck.innerHTML = "";
+						})
+					}else{
+						lyrQueryFieldCheck.innerHTML = "";
+						lyrQueryFieldSearch.disabled = true;
+					}
+	   			});
+			});
+          }
+        }
+      });
+    }
+	// 透明度設定 
     let scrollLayerOpacity = document.getElementsByClassName("scrollLayerOpacity");
     for (let i = 0; i < scrollLayerOpacity.length; i++) {
       let layerSlider = scrollLayerOpacity[i];
