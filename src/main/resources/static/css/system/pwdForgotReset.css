@@ -52,7 +52,7 @@ label#icon {
 }
 
 input[type=text], input[type=password] {
-      width: calc(100% - 57px);
+      width: 210px;
       height: 36px;
       margin: 13px 0 0 -5px;
       padding-left: 10px; 
@@ -67,6 +67,7 @@ input[type=password] {
 }
 
 #icon {
+	width: 20px;
     display: inline-block;
     padding: 9.3px 15px;
     box-shadow: 1px 2px 5px rgba(0, 0, 0, .09);

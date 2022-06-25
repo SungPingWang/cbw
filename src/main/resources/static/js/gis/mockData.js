@@ -133,6 +133,6 @@ var MockLyrData = {
 		    	haloColor: "white"
 		  	}
 		},
-		"canQueryField": ["魚塭編", "縣市別"]
+		"canQueryField": ["魚塭編", "縣市別", "LAKE_NO"]
 	}
 }
