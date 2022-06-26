@@ -1,6 +1,7 @@
 package com.csprs.cbw;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,10 +21,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.csprs.cbw.bean.cbw.cbwbean;
 import com.csprs.cbw.bean.cbw.cbwstation;
+import com.csprs.cbw.bean.user.LoginInfo;
 import com.csprs.cbw.bean.user.Permission;
 import com.csprs.cbw.dao.user.PermissionDaoImpl;
+import com.csprs.cbw.repository.user.LoginInfoRepository;
 import com.csprs.cbw.repository.user.MyProfileRepository;
 import com.csprs.cbw.service.cbw.CbwService;
+import com.csprs.cbw.service.user.LoginInfoService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,6 +42,19 @@ class CsprsCbwApplicationTests {
 	private MyProfileRepository myProfileRepository;
 	@Autowired
 	private PermissionDaoImpl permissionDaoImpl;
+	@Autowired
+	private LoginInfoService loginInfoService;
+	@Autowired
+	private LoginInfoRepository loginInfoRepository;
+	
+	@Test
+	void testLoginInfoService() {
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setAccount("Lui");
+		loginInfo.setLoginTime(new Date());
+		loginInfoRepository.save(loginInfo);
+		System.out.println("ok");
+	}
 	
 	@Test
 	void testPermission() {

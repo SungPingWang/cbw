@@ -1,6 +1,7 @@
 package com.csprs.cbw.handler;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -13,7 +14,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+import com.csprs.cbw.bean.user.LoginInfo;
 import com.csprs.cbw.service.manage.LatestNewService;
+import com.csprs.cbw.service.user.LoginInfoService;
 import com.csprs.cbw.util.Constant;
 
 @Component
@@ -21,6 +24,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 	
 	@Autowired
 	private LatestNewService latestNewService;
+	@Autowired
+	private LoginInfoService loginInfoService;
 
 	
 	@Override
@@ -34,6 +39,10 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 		List<String> checkWarningMessage = latestNewService.checkWarningMessage(name);
 		session.setAttribute("WarningMsgs", checkWarningMessage);
 		//response.sendRedirect(request.getContextPath() + "/cwb/index");
+		LoginInfo loginInfo = new LoginInfo();
+		loginInfo.setAccount(name);
+		loginInfo.setLoginTime(new Date());
+		loginInfoService.save(loginInfo);
 		response.sendRedirect(Constant.HOME_PATH);
 	}
 

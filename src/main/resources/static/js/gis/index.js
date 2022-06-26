@@ -488,6 +488,7 @@ require([
     // layer 圖資服務
     let layerChosenComboboxItem = document.getElementById("layerChosenComboboxItem");
     layerChosenComboboxItem.addEventListener("calciteComboboxChange", function (event) {
+		//setblockUI();
         let selectedItems = event.detail.selectedItems;
         let addFeatureLayer = "";
         let subFeatureLayer = "";
@@ -573,7 +574,7 @@ require([
         }
 
         if (subFeatureLayer != "") {
-            setblockUI();
+            //setblockUI();
             for (let lyr of map.layers) {
                 if (lyr.id == subFeatureLayer) {
                     map.layers.remove(lyr);

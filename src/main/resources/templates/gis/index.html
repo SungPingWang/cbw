@@ -102,8 +102,7 @@
 							<calcite-action id="bmapId" text="底圖" icon="layer-basemap"></calcite-action>
 						</calcite-action-group>
 					</calcite-action-bar>
-
-
+					
 					<calcite-combobox id="layerChosenComboboxItem" scale="s">
 						<!--
             <calcite-combobox-item value="roadKillLyr" text-label="路殺圖資"></calcite-combobox-item>
@@ -254,7 +253,7 @@
 			});
 			
 			$( "#lyrQueryFieldSelectDialog" ).dialog({
-				title: "查詢關鍵字",
+				title: "系統圖資查詢關鍵字",
 				bgiframe: true,
 				autoOpen: false,
 				width: 600,
@@ -271,7 +270,7 @@
 				}
 			});
 			$( "#uploadLyrQueryFieldSelectDialog" ).dialog({
-				title: "查詢關鍵字",
+				title: "上傳圖資查詢關鍵字",
 				bgiframe: true,
 				autoOpen: false,
 				width: 600,
@@ -285,6 +284,16 @@
 					document.getElementById("uploadLyrQueryFieldSearch").disabled = true;
 					document.getElementById("uploadLyrQueryFieldCheck").innerHTML = "";
 					document.getElementById("uploadLyrQueryFieldDescription").value = "";
+				}
+			});
+			// 系統圖資點擊的時候觸發的blockUI會有延遲導致夜面沒有被遮罩，這裡另外進行滑鼠放開後的事件
+			
+			document.body.addEventListener("mouseup", function(e){
+				if(e.target.className == "mapServiceCombobox"){
+					if(e.target.selected == false){
+						alert("圖資內容加載需要時間，請稍等...");
+						setblockUI();
+					}
 				}
 			});
 		}
