@@ -18,9 +18,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import com.csprs.cbw.bean.cbw.cbwbean;
 import com.csprs.cbw.bean.cbw.cbwstation;
+import com.csprs.cbw.bean.superset.SupersetResponse;
 import com.csprs.cbw.bean.user.LoginInfo;
 import com.csprs.cbw.bean.user.Permission;
 import com.csprs.cbw.dao.user.PermissionDaoImpl;
@@ -28,6 +35,8 @@ import com.csprs.cbw.repository.user.LoginInfoRepository;
 import com.csprs.cbw.repository.user.MyProfileRepository;
 import com.csprs.cbw.service.cbw.CbwService;
 import com.csprs.cbw.service.user.LoginInfoService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,6 +55,27 @@ class CsprsCbwApplicationTests {
 	private LoginInfoService loginInfoService;
 	@Autowired
 	private LoginInfoRepository loginInfoRepository;
+	@Autowired
+	private RestTemplate restTemplate;
+	
+	@Test
+	void TestRestTemplate() {
+		ObjectMapper objectMapper = new ObjectMapper();
+		ObjectNode node = objectMapper.createObjectNode();
+		node.put("username", "admin");
+		node.put("password", "admin");
+		node.put("provider", "db");
+		node.put("refresh", true);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		
+		HttpEntity<String> request = new HttpEntity<String>(node.toString(), headers);
+		
+		
+		String url = "http://172.22.110.27:8088/api/v1/security/login";
+		ResponseEntity<SupersetResponse> postForEntity = restTemplate.postForEntity(url, request, SupersetResponse.class);
+		System.out.println(postForEntity.getBody().getAccess_token());
+	}
 	
 	@Test
 	void testLoginInfoService() {

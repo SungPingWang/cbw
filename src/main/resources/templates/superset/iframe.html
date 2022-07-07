@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.88.1">
+    <title>Superset Iframe測試</title>
+
+    <th:block th:replace="components/layout::bootstrap_head_css" />
+	<th:block th:replace="components/layout::global_utils_js" />
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
+    </style>
+
+
+</head>
+
+<body>
+	<div th:include="components/header :: header"></div>
+    <main>
+        <div class="container py-1">
+            <div class="p-5 mb-4 text-white bg-dark rounded-3">
+                <div class="container-fluid py-1">
+                    <h2 class="fw-bold">Superset Iframe 測試</h2>
+                    <p class="col-md-12 fs-10">
+						※ export FLASK_APP=superset <br>
+                        ※ superset init <br>
+						※ gunicorn --workers 1 --timeout 120 --bind 192.168.233.149:8787 "superset.app:create_app()" --daemon
+					</p>
+                </div>
+            </div>
+            <div class="row align-items-md-stretch">
+                <div class="col-md-6" style="height: 550px;">
+                    <!--<div class="h-100 p-5 text-white bg-dark rounded-3">-->
+					<div class="h-100 p-5 bg-light border rounded-3" >
+                        <h2>Change the background</h2>
+                        <iframe width="100%" height="400" seamless frameBorder="0" scrolling="no" 
+						  th:src="@{${chart1}}"
+						>
+						</iframe>
+                    </div>
+                </div>
+                <div class="col-md-6" style="height: 550px;">
+                    <div class="h-100 p-5 bg-light border rounded-3">
+                        <h2>Add borders</h2>
+                        <iframe width="100%" height="400" seamless frameBorder="0" scrolling="no" 
+				            th:src="@{${chart2}}">
+				        </iframe>
+                    </div>
+                </div>
+            </div>
+			<br>
+			<div class="p-5 mb-4 bg-light rounded-3">
+                <div class="container-fluid py-1">
+                    <iframe
+					  width="100%"
+					  height="400"
+					  seamless
+					  frameBorder="0"
+					  scrolling="no"
+					  th:src="@{${chart3}}"
+					>
+					</iframe>
+                </div>
+            </div>
+			<div class="p-5 mb-4 bg-light rounded-3">
+                <div class="container-fluid py-1">
+                    <iframe
+					  width="100%"
+					  height="400"
+					  seamless
+					  frameBorder="0"
+					  scrolling="no"
+					  th:src="@{${chart4}}"
+					>
+					</iframe>
+                </div>
+            </div>
+			<div class="p-5 mb-4 text-white bg-dark rounded-3">
+                <div class="container-fluid py-1">
+                    <h2 class="fw-bold">note</h2>
+                    <p class="col-md-12 fs-10">
+						※ <br>
+                        ※ superset init <br>
+					</p>
+                </div>
+            </div>
+        </div>
+    </main>
+	<div class="container">
+        <div th:include="components/footer :: footer"></div>
+    </div>
+	<!--
+    <script>
+        $.get('http://localhost:8080/csprscbw/redirect', function (data) {
+            console.log(data);
+            $('#yourDiv').html(data);
+        });
+    </script>
+	-->
+
+</body>
+
+</html>
