@@ -46,6 +46,22 @@
 					</p>
                 </div>
             </div>
+			<!-- iframe set header test -->
+			<div class="p-5 mb-4 bg-light rounded-3">
+                <div class="container-fluid py-1">
+                    <iframe
+					  id="myFrame"
+					  width="100%"
+					  height="400"
+					  seamless
+					  frameBorder="0"
+					  scrolling="no"
+					  th:src="@{${chart5}}"
+					>
+					</iframe>
+                </div>
+            </div>
+			<!-- -->
             <div class="row align-items-md-stretch">
                 <div class="col-md-6" style="height: 550px;">
                     <!--<div class="h-100 p-5 text-white bg-dark rounded-3">-->
@@ -114,8 +130,31 @@
             $('#yourDiv').html(data);
         });
     </script>
-	-->
-
+	
+	<script th:inline="javascript">
+	/*<![CDATA[*/
+		$(function() {
+			console.log(/*[[${chart5}]]*/);
+		    $.ajax({
+			    type: "GET", 
+			    url: /*[[${chart5}]]*/,
+			    //contentType: "application/json",
+			    beforeSend: function(xhr, settings){
+					xhr.setRequestHeader("X-CSRFToken", /*[[${tk}]]*/);
+					xhr.setRequestHeader("Accept", "application/json");
+					//xhr.setRequestHeader("Referer", "http://fa.idv.tw/superset/welcome/");
+					//xhr.setRequestHeader("Referer", "");
+					xhr.setRequestHeader("Location", "http://fa.idv.tw/superset/welcome/");
+				},
+			    success: function(data){
+			        $("#myFrame").attr('src',"/")
+			        $("#myFrame").contents().find('html').html(data); 
+			    }
+			});
+		});
+        
+    /*]]>*/
+	</script>-->
 </body>
 
 </html>

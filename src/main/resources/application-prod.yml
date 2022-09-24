@@ -3,8 +3,7 @@ server:
     context-path: /csprscbw
 spring:
   datasource: 
-    url: jdbc:postgresql://localhost:5432/LuiProfile
-    #url: jdbc:postgresql://172.22.110.17:9876/obw
+    url: jdbc:postgresql://172.22.110.24:5432/cbw20220625
     username: postgres
     password: .2bcdjfz
     # type: com.zaxxer.hikari.HikariDataSource #當前預設的數據庫連接池
@@ -38,7 +37,7 @@ mail:
   port: 587
   username: t124650401@gmail.com
   password: sbfsqoyivxoohdpe
-  domainip: localhost:8080
+  domainip: 172.22.110.27:8080
 codec:
   key: csprscbw12345678
   transformation: AES
